@@ -78,7 +78,7 @@ background-color: rgb(255,0,0);opacity:0.1;
         </div>
     </div>
 
-    <!-- This loop is to display similar medicine -->
+    <!-- This loop is to display similar medicine in meds loop -->
    
     {% if similar_meds %}
     <h4 class="text-center" style="color: rgb(154, 228, 255);">Medicine similar to your search</h4>
@@ -144,9 +144,9 @@ background-color: rgb(255,0,0);opacity:0.1;
 
 
 
-<!-- This loop is to display similar medicine -->
+<!-- This loop is to display similar medicine but not in meds loop -->
    
-{% if similar_meds %}
+{% if flag %}
 <h4 class="text-center" style="color: rgb(154, 228, 255);">Medicine similar to your search</h4>
 
 {% for i in similar_meds  %}

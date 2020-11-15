@@ -71,6 +71,8 @@ def medView(request,id):
 
 @login_required(login_url='/login/')
 def searchResult(request):
+    flag=1
+    # This variable flag is used to fix repeating similar meds issue
     if request.GET['searchMed'] == "all":
         meds = medicine.objects.all()
         similar_meds=None
@@ -78,7 +80,9 @@ def searchResult(request):
         searchMed = request.GET['searchMed']
         meds = medicine.objects.filter(MedName__iexact = searchMed)
         similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed)
-    params={ 'meds': meds, 'similar_meds':similar_meds }
+        if meds and similar_meds :
+            flag=None
+    params={ 'meds': meds, 'similar_meds':similar_meds, 'flag': flag }
     return render(request, 'webapp/searchResult.html',params)
 
 def status(request):
