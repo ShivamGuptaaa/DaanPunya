@@ -77,7 +77,6 @@ def searchResult(request):
     else:
         searchMed = request.GET['searchMed']
         meds = medicine.objects.filter(MedName__iexact = searchMed)
-
         similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed)
     params={ 'meds': meds, 'similar_meds':similar_meds }
     return render(request, 'webapp/searchResult.html',params)
