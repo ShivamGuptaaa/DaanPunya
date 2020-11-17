@@ -5,7 +5,16 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login as user_login ,logout
 from django.contrib.auth.decorators import login_required
+from django.conf import settings 
+from django.core.mail import send_mail 
+import random
 
+fname=''
+lname=''
+email=''
+password=''
+username=''
+gen_otp=0
 
 def index(request):
     return render(request,'webapp/index.html')
@@ -16,25 +25,53 @@ def login(request):
 def register(request):
     return render(request,'webapp/register.html')
 
-
 def handleRegister(request):
     if request.method == 'POST':
         #Extracting POST parameters
+        global username
+        global fname
+        global lname
+        global password
+        global email
         fname=request.POST['Fname']
         lname=request.POST['Lname']
         email=request.POST['email']
         password=request.POST['password']
         # username=fname+lname+'-'+email
         username=email
-        MyUser =User.objects.create_user(username,email=email,password=password)
-        MyUser.first_name=fname
-        MyUser.last_name=lname
-        MyUser.save()
-        messages.success(request,"Your DaanPunya account has been successfully created")
-        return redirect('home')
+        global gen_otp
+        gen_otp= str(random.randint(1000,9999))
+        subject = 'Danpunya'
+        message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [email, ] 
+        send_mail( subject, message, email_from, recipient_list ) 
+        return render(request, 'webapp/checkOtp.html')
     else:
-        return HttpResponse("Error 404")
+        return render(request, 'webapp/register.html')
 
+def handleOtp(request):
+    if request.method == 'POST':
+        otp=request.POST['otp']
+        global gen_otp
+        global username
+        global fname
+        global lname
+        global password
+        global email
+        print(gen_otp)
+        if otp == gen_otp:
+            MyUser =User.objects.create_user(username,email=email,password=password)
+            MyUser.first_name=fname
+            MyUser.last_name=lname
+            MyUser.save()
+            messages.success(request,"Your DaanPunya account has been successfully created")
+            return render(request, 'webapp/login.html')
+        else:
+            messages.error(request,"Your OTP didn't matched , PLease Try Again","danger")
+            return redirect('home')
+    else:
+        return render(request, 'webapp/register.html')
 
 def handleLogin(request):
     if request.method == 'POST':
@@ -55,7 +92,7 @@ def handleLogin(request):
 
 def handleLogout(request):
     logout(request) 
-    messages.success(request,"Successfully LOGGED OUT")
+    messages.success(request,"Successfully LOGGED OUT","warning")
     return redirect('home')
 
 def about(request): 
@@ -92,6 +129,7 @@ def status(request):
 @login_required(login_url='/login/')
 def donateMed(request):
     if request.method == "POST":
+        user_email = request.user
         MedName=request.POST['MedName']
         MedExpiry=request.POST['MedExpiry']
         MedQuantity=request.POST['MedQuantity']
@@ -104,9 +142,9 @@ def donateMed(request):
         MedZip=request.POST['MedZip']
         # MedDate=request.POST['MedDate']
         # print(MedName,MedExpiry,MedQuantity,MedFor,MedReason,MedPresc,MedPic,MedAddress,MedZip,MedDate)
-        ins = medicine(MedName=MedName,MedExpiry=MedExpiry,MedQuantity=MedQuantity,MedFor=MedFor,
+        ins = medicine(user_email=user_email,MedName=MedName,MedExpiry=MedExpiry,MedQuantity=MedQuantity,MedFor=MedFor,
                        MedReason=MedReason,MedPresc=MedPresc,MedPic=MedPic,MedPic2=MedPic2,MedAddress=MedAddress,
                        MedZip=MedZip)
         ins.save()
-
+        messages.success(request,"Your submission to donate medicine is successfull , THANKYOU!")
     return render(request, 'webapp/donateMed.html')

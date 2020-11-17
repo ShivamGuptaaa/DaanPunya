@@ -34,8 +34,22 @@ border-color: darkgrey;
 
 {% block body %}
 
+<!-- Here this block message is used to not inherit the messages part from common template -->
+{% block messages %}
+{% endblock %}
+
+<!-- Here this below part of code is used to display messages in the marquee tag itself which exists on homepage -->
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-1" style="height:3em" role="alert">
+  <h5 style="font-family: castellar"><marquee scrollamount="10"> <strong>Message :</strong>&nbsp {{ message }}
+    {% endfor %}
+    {% else %}
 <div class="alert alert-success alert-dismissible fade show mb-1" style="height:3em" role="alert">
-  <h5 style="font-family: castellar"><marquee scrollamount="10"><strong>NAMASTE !</strong>&nbsp DAANPUNYA.IN MEIN AAPKA SWAGAT HAI !!!</marquee></h5>
+  <h5 style="font-family: castellar"><marquee scrollamount="10">
+    <strong>NAMASTE !</strong>&nbsp DAANPUNYA.IN MEIN AAPKA SWAGAT HAI !!!
+    {% endif %}
+  </marquee></h5>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -145,13 +159,6 @@ border-color: darkgrey;
   <br><br><br><br>
 </div>
 <script> 
- /* function validateSearch(){
-  var checkEmpty = document.getElementById("searchMed").value;
-  if (checkEmpty == "")
-  {
-      alert("Please Enter Medicine Name To Search!")
-  }
-} */
 
 $("#searchBtn").click(function(e) { 
   var checkEmpty = document.getElementById("searchMed").value;
@@ -161,37 +168,9 @@ $("#searchBtn").click(function(e) {
       e.preventDefault(); 
 }
 });
-  
+
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

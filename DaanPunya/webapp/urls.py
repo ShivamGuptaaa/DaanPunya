@@ -15,4 +15,5 @@ urlpatterns = [
     path("handleLogin",views.handleLogin,name="handleLogin"),
     path("handleLogout",views.handleLogout,name="handleLogout"),
     path("donateMed/",views.donateMed,name="donateMed"),
+    path("handleOtp",views.handleOtp,name="handleOtp"),
     ]

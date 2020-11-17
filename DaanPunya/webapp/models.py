@@ -1,10 +1,11 @@
 from django.db import models
 import datetime
-
+from django.conf import settings
 
 # Create your models here.
 class  medicine(models.Model):
     id=models.AutoField
+    user_email=models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     MedName=models.CharField(max_length=30)
     MedExpiry=models.CharField(max_length=20,default="")
     MedQuantity=models.IntegerField(default=0)
