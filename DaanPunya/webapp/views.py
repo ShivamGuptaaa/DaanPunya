@@ -16,6 +16,7 @@ password=''
 username=''
 gen_otp=0
 
+# Functions for Html pages
 def index(request):
     return render(request,'webapp/index.html')
 
@@ -25,6 +26,73 @@ def login(request):
 def register(request):
     return render(request,'webapp/register.html')
 
+def about(request): 
+    return render(request, 'webapp/about.html')
+
+def contact(request):
+    return render(request, 'webapp/contact.html')
+
+@login_required(login_url='/login/')
+def donateMed(request):
+    if request.method == "POST":
+        user_email = request.user
+        MedName=request.POST['MedName']
+        MedExpiry=request.POST['MedExpiry']
+        MedQuantity=request.POST['MedQuantity']
+        MedFor=request.POST['MedFor']
+        MedReason=request.POST['MedReason']
+        MedPresc=request.POST['MedPresc']
+        MedPic=request.POST['MedPic']
+        MedPic2=request.POST['MedPic2']
+        MedAddress=request.POST['MedAddress']
+        MedZip=request.POST['MedZip']
+        ins = medicine(user_email=user_email,MedName=MedName,MedExpiry=MedExpiry,MedQuantity=MedQuantity,MedFor=MedFor,
+                       MedReason=MedReason,MedPresc=MedPresc,MedPic=MedPic,MedPic2=MedPic2,MedAddress=MedAddress,
+                       MedZip=MedZip)
+        ins.save()
+        messages.success(request,"Your submission to donate medicine is successfull , THANKYOU!")
+    return render(request, 'webapp/donateMed.html')
+
+@login_required(login_url='/login/')
+def medView(request,id):
+    displayMed = medicine.objects.filter(id=id)
+    if request.method == 'POST':
+        print(displayMed)
+        donor = User.objects.get(email=displayMed[0].user_email)
+        subject = 'Your medicne got a receiver'
+        message = f'Hi {donor.first_name}{donor.last_name}, {request.user.first_name} has requested to get your {displayMed[0].MedName} medicine, PLease follow the link below for more details are proceed further or to decline the request'
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [donor.email, ] 
+        send_mail( subject, message, email_from, recipient_list ) 
+        return render(request, 'webapp/medView.html',{'med': displayMed[0],'ack': 'Requested to donor for medicine'})
+    return render(request, 'webapp/medView.html',{'med': displayMed[0]})
+
+@login_required(login_url='/login/')
+def searchResult(request):
+    flag=1
+    # This variable flag is used to fix repeating similar meds issue
+    if request.GET['searchMed'] == "all":
+        meds = medicine.objects.all()
+        similar_meds=None
+        flag=None
+    else:
+        searchMed = request.GET['searchMed']
+        meds = medicine.objects.filter(MedName__iexact = searchMed)
+        similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed)
+        if meds and similar_meds :
+            flag=None
+        if not meds and not similar_meds :
+            flag=None
+    print(flag)
+    params={ 'meds': meds, 'similar_meds':similar_meds, 'flag': flag }
+    return render(request, 'webapp/searchResult.html',params)
+
+def status(request):
+    return render(request, 'webapp/status.html')
+
+
+
+# APIs
 def handleRegister(request):
     if request.method == 'POST':
         #Extracting POST parameters
@@ -95,56 +163,3 @@ def handleLogout(request):
     messages.success(request,"Successfully LOGGED OUT","warning")
     return redirect('home')
 
-def about(request): 
-    return render(request, 'webapp/about.html')
-
-def contact(request):
-    return render(request, 'webapp/contact.html')
-
-@login_required(login_url='/login/')
-def medView(request,id):
-    displayMed = medicine.objects.filter(id=id)
-    return render(request, 'webapp/medView.html',{'med': displayMed[0]})
-
-@login_required(login_url='/login/')
-def searchResult(request):
-    flag=1
-    # This variable flag is used to fix repeating similar meds issue
-    if request.GET['searchMed'] == "all":
-        meds = medicine.objects.all()
-        similar_meds=None
-    else:
-        searchMed = request.GET['searchMed']
-        meds = medicine.objects.filter(MedName__iexact = searchMed)
-        similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed)
-        if meds and similar_meds :
-            flag=None
-    params={ 'meds': meds, 'similar_meds':similar_meds, 'flag': flag }
-    return render(request, 'webapp/searchResult.html',params)
-
-def status(request):
-    return render(request, 'webapp/status.html')
-
-
-@login_required(login_url='/login/')
-def donateMed(request):
-    if request.method == "POST":
-        user_email = request.user
-        MedName=request.POST['MedName']
-        MedExpiry=request.POST['MedExpiry']
-        MedQuantity=request.POST['MedQuantity']
-        MedFor=request.POST['MedFor']
-        MedReason=request.POST['MedReason']
-        MedPresc=request.POST['MedPresc']
-        MedPic=request.POST['MedPic']
-        MedPic2=request.POST['MedPic2']
-        MedAddress=request.POST['MedAddress']
-        MedZip=request.POST['MedZip']
-        # MedDate=request.POST['MedDate']
-        # print(MedName,MedExpiry,MedQuantity,MedFor,MedReason,MedPresc,MedPic,MedAddress,MedZip,MedDate)
-        ins = medicine(user_email=user_email,MedName=MedName,MedExpiry=MedExpiry,MedQuantity=MedQuantity,MedFor=MedFor,
-                       MedReason=MedReason,MedPresc=MedPresc,MedPic=MedPic,MedPic2=MedPic2,MedAddress=MedAddress,
-                       MedZip=MedZip)
-        ins.save()
-        messages.success(request,"Your submission to donate medicine is successfull , THANKYOU!")
-    return render(request, 'webapp/donateMed.html')
