@@ -1,0 +1,234 @@
+{% extends 'webapp/common.html' %} 
+{% block title %} donateMed {% endblock %} 
+{%block css %} 
+.heightSet { height:45px; }
+.inpWidth { width:155px; text-align:center; } 
+{% endblock %} 
+{% block body %}
+
+<h1 class="text-center">
+  <span class="badge badge-pill badge-warning">Donate Here</span>
+</h1>
+<!-- <div class="shadow-lg p-3 mb-5 bg-white rounded" style="background-color: #e3f2fd;">Hello ____ ,please fill the following details in order to donate medicine</div> -->
+
+<div class="alert alert-warning text-danger" align="center" role="alert">
+  <div>
+    <strong
+      >Hello ____ ,please fill the following details in order to donate
+      medicine</strong
+    >
+  </div>
+</div>
+
+<!-- <div class="alert alert-warning text-danger" style="height:40px;" align="center" role="alert">
+    <h6 style="height:10px; font-size:15pt;">Hello ____ ,please fill the following details in order to donate medicine</h6>
+</div> -->
+
+<form action="/donateMed/" method="post">
+  {% csrf_token %}
+  <div class="col-md-7 col-sm-10 mx-auto">
+    <!-- <label class="sr-only" for="inlineFormInputGroup">Username</label> -->
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth" style="text-align: center">
+          Name:
+          <h6 style="color: red">*</h6>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="form-control heightSet"
+        name="MedName"
+        id="MedName"
+        placeholder="Medicine Name"
+        required
+      />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">
+          Expiry Date:
+          <h6 style="color: red">*</h6>
+        </div>
+      </div>
+      <input
+        type="input"
+        class="form-control heightSet"
+        name="MedExpiry"
+        id="MedExpiry"
+        placeholder="eg:- Jan 2020"
+        required
+      />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">
+          Quantity:
+          <h6 style="color: red">*</h6>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="form-control heightSet"
+        name="MedQuantity"
+        id="MedQuantity"
+        placeholder="Quantity of packets want to donate"
+        required
+      />
+    </div>
+
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">For:</div>
+      </div>
+      &nbsp&nbsp
+      <!-- <span class="border border-secondary rounded"> -->
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input heightSet"
+          type="radio"
+          name="MedFor"
+          id="inlineRadio1"
+          value="human"
+          checked
+        />
+        <label class="form-check-label" for="inlineRadio1">Human</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input heightSet"
+          type="radio"
+          name="MedFor"
+          id="inlineRadio2"
+          value="animal"
+        />
+        <label class="form-check-label" for="inlineRadio2">Animal</label>
+        <!-- </span> -->
+      </div>
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">
+          Reason:
+          <h6 style="color: red">*</h6>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="form-control heightSet"
+        name="MedReason"
+        id="MedReason"
+        placeholder="Why exactly you bought this medicine?"
+        required
+      />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">Prescription:</div>
+      </div>
+      <input
+        type="file"
+        accept="image/*"
+        class="form-control heightSet"
+        name="MedPresc"
+        id="MedPresc"
+      />
+    </div>
+
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">
+          Medicine's Picture:
+          <h6 style="color: red">*</h6>
+        </div>
+      </div>
+      <input
+        type="file"
+        accept="image/*"
+        class="form-control heightSet"
+        name="MedPic"
+        id="MedPic"
+        required
+      />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">Medicine's Picture:</div>
+      </div>
+      <input
+        type="file"
+        accept="image/*"
+        class="form-control heightSet"
+        name="MedPic2"
+        id="MedPic2"
+      />
+    </div>
+
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text inpWidth">Address:</div>
+      </div>
+      <input
+        type="text"
+        class="form-control heightSet"
+        name="MedAddress"
+        id="MedAddress"
+        placeholder="Address"
+      />
+    </div>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <!-- <span class="border border-info rounded">  -->
+        <div class="input-group-text inpWidth">
+          Pin Code:
+          <h6 style="color: red">*</h6>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="form-control heightSet"
+        name="MedZip"
+        id="MedZip"
+        maxlength="6"
+        placeholder="Postal Code"
+        required
+      />
+    </div>
+
+    <!--        <div class="input-group mb-2">-->
+    <!--            <div class="input-group-prepend">-->
+    <!--                <div class="input-group-text inpWidth">Date:<h6 style="color:red">*</h6>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <input type="date" class="form-control heightSet" name="MedDate" id="MedDate" placeholder="Preferable Date for pickup"-->
+    <!--                required>-->
+    <!--        </div>-->
+
+    <div class="text-center">
+      <button
+        type="submit"
+        id="submit"
+        class="btn btn-danger"
+        data-toggle="tooltip"
+        data-placement="right"
+        title="Submit Details"
+      >
+        Donate
+      </button>
+    </div>
+  </div>
+</form>
+<!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript"> 
+var Medname=document.getElementById("MedName").value;
+$('#submit').click(function(){
+    console.log("SUBMITTED");
+    if (Medname == '')
+    {
+        alert("error");
+    }
+    
+})
+</script> -->
+
+{% endblock %}

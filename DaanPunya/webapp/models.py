@@ -1,11 +1,14 @@
 from django.db import models
 import datetime
 from django.conf import settings
+from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 # Create your models here.
 class  medicine(models.Model):
     id=models.AutoField
-    user_email=models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+    user_email=models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    update=models.BooleanField(default=False,null=True)
     MedName=models.CharField(max_length=30)
     MedExpiry=models.CharField(max_length=20,default="")
     MedQuantity=models.IntegerField(default=0)
@@ -20,3 +23,77 @@ class  medicine(models.Model):
 
     def __str__(self):
         return self.MedName
+
+class rq_medicine(models.Model):
+    id=models.AutoField(primary_key = True)
+    user_email=models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    update=models.BooleanField(default=False)
+    MedName=models.CharField(max_length=30)
+    MedQuantity=models.IntegerField()
+    MedFor=models.CharField(max_length=10)
+    MedReason=models.CharField(max_length=100)
+    MedPresc=models.ImageField(upload_to="webapp/images")
+    MedDate=models.DateField(default=now)
+
+    def __str__(self):
+        return self.MedName
+
+del_choice = {
+
+    ('Not Selected',None),
+    ('org_pick','pickup by org'),
+    ('courier','courier')
+}
+
+class applied_medicine(models.Model):
+    med = models.ForeignKey(medicine, on_delete=models.CASCADE)
+    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    date= models.DateField(default=now)
+
+
+    def __str__(self):
+        return self.med.MedName
+
+class org_update(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rq_med = models.ForeignKey(rq_medicine, on_delete=models.CASCADE)
+    rqst_med = models.BooleanField(default=False)
+    mode_del = models.CharField(max_length=50 ,choices=del_choice)
+    frm_date = models.DateField(default=None,null=True)
+    to_date = models.DateField(default=None,null=True)
+    med_rcvd = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.rq_med.MedName
+
+class dnr_update(models.Model):
+    med = models.ForeignKey(medicine, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    mode_del = models.CharField(default=None,max_length=30,choices=del_choice,null=True)
+    frm_date = models.DateField(default=None,null=True)
+    to_date = models.DateField(default=None,null=True)
+    select_date = models.DateField(default=None,null=True)
+    rqst_user_email = models.CharField(default=None,null=True,max_length=50)
+    med_dispatched = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.med.MedName
+        
+
+# update
+
+# ORG
+# requested for medicine
+# accepted request of medicine----
+# select mode of delivery 
+# range of date field  
+# medicine received
+
+
+# DONOR
+# medicine uploaded for donation
+# accept request of medicine from org
+# details of org will be shown---
+# donor will be notified of delivery mode
+# Select date from range provided by org
+# Medicine dispatched

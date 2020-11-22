@@ -1,0 +1,156 @@
+{% extends "webapp/common.html" %}
+{% block title %}
+  Status
+{% endblock title %}
+{% block css %} 
+
+.jumbotron {
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 1.8rem;
+    
+  
+    background: #1a2a6c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
+}
+
+{% endblock css %}
+
+{% block head %}
+  <script>
+      
+    
+
+        function del_update()
+        {
+            document.getElementById("progressbar").setAttribute("style","width: 25%");
+        }
+        function from_date_update()
+        {var valueDate = document.getElementById('from_date').value;
+
+        if (!valueDate) {
+            alert("Please select starting date")
+        }
+        else
+        {
+            document.getElementById("progressbar").setAttribute("style","width: 50%");
+            $(function () {
+                //$('#from_date_check').popover();
+              });
+        }
+    }
+
+        function to_date_update()
+        {var valueDate = document.getElementById('to_date').value;
+
+        if (!valueDate) {
+            alert("Please select ending date")
+        }
+        else
+        {
+            document.getElementById("progressbar").setAttribute("style","width: 75%");
+        }
+    }
+
+</script>
+    
+{% endblock head %}
+
+{% block body %}
+
+<!-- It will check whether any medicine is there in list -->
+{% if lst %}
+
+<!-- Here the loop for respective med details starts   -->
+{% for i in lst %}
+  
+<div class="container">
+<div class="jumbotron my-3">
+  <h1 class="display-4">{{i.med.MedName}}</h1>
+  <p class="lead">{{i.med.MedReason}}</p>
+  <div class="row">
+      <h6 class="ml-5">Medicine Expiry: {{i.med.MedExpiry}}</h6>
+      <h6 class="ml-5">Medicine Quantity: {{i.med.MedQuantity}}</h6>
+      <h6 class="ml-5">Medicine For: {{i.med.MedFor}}</h6>
+  </div>
+
+ <!-- This if condition is used to know that whether there is any update in medicine or not since it has been requested by org    -->
+  {% if not i.select_date %}
+      
+<form action="/status1/{{i.med.id}}" method="post">
+    {% csrf_token %}
+
+  <div class="input-group-text row-sm my-1">
+      Select date from ____ to _____
+   <div class="ml-5">Select date: </div> 
+   <input type="date" class="mr-2" name="sel_date" id="sel_date" min="2020-11-02" max="2020-12-09">
+    <button type="submit" class="btn btn-primary mx-auto">SUBMIT</button>
+</div>
+
+
+<div class="input-group-text">
+    <input class="ml-5 mr-2" type="checkbox" value="">
+    <label class="">
+      Medicine dispatched
+    </label>
+  </div>
+</form>
+  <div class="row">
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Medicine uploaded</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">org requested for med</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Delivery mode</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Date selected:</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Med dispatched</h6></div>
+  </div>
+  <div class="progress bg-dark" style="height: 35px;">
+    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" name="progressbar" id="progressbar" role="progressbar" style="width: 01%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
+  </div>
+</div>
+</div>
+
+<!-- If med details is updated then code below will execute -->
+{% else %}
+
+<div class="my-2 row-sm input-group-text bg-info">
+<h6 class="mx-auto">Mode of Delivery chosen: 
+    <!-- This if is used to display the org_pick mode of delivey in normal form instead of                       abbrevation which is returned from the table                      -->
+
+<h6 class="mx-auto">Date range is From: {{i.frm_date}}</h6>
+<h6 class="mx-auto">To: {{i.to_date}}</h6>
+</div>
+
+
+<div class="input-group-text">
+    <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
+    <label class="" for="defaultCheck1">
+      Medicine received
+    </label>
+  </div>
+  <div class="row">
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Medicine uploaded: {{}}</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">org requested for med</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Delivery mode</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Date selected:</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Med dispatched</h6></div>
+    </div>
+  <div class="progress bg-dark" style="height: 35px;">
+    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 66.66%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
+  </div>
+</div>
+</div>
+
+{% endif %}
+<!-- end of if condition which checks med update  -->
+
+{% endfor %}
+<!-- end of looping of available med in lst  -->
+
+{% else %}
+<h1 class="text-center my-5">You don't have any medicine to show</h1>
+{% endif %}
+<!-- end of if condition which checks med is still in lst or not -->
+
+
+{% endblock body %}
+

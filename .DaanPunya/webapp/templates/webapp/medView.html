@@ -1,0 +1,112 @@
+{% extends 'webapp/common.html' %} {% block title %} {{med.MedName}} {% endblock%}
+{% block css %}
+body {
+  background-color: #1e7e3454;
+}
+
+.bdr {
+  border-style:solid;
+  border-width:5px;
+  border-color:#17a2b8;
+}
+
+
+{% endblock %}
+ {% block body %}
+
+<div class="container-fluid my-3 mx-2 row">
+  <div class="col-4">
+    <div class="">
+      <div class="">
+      <img src="/media/{{med.MedPic}}" class="bdr d-block mx-2 mt-2" height="240px" width="400px" alt="{{med.MedName}}">
+    </div>
+    <div class="">
+      <img src="/media/{{med.MedPic2}}" class="bdr d-block mx-2 my-4" height="240px" width="400px" alt="{{med.MedName}}">
+    </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="row mb-3">
+      <div class="btn btn-info" role="alert">
+        <h2>{{med.MedName}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="border border-info py-3 px-3" style="background-color: #E0FFFF;">
+    
+        Medicine is the science and practice of establishing the diagnosis,
+        prognosis, treatment, and prevention of disease. Medicine encompasses a
+        variety of health care practices evolved to maintain and restore health
+        by the prevention and treatment of illness. Contemporary medicine
+        applies biomedical sciences, biomedical research, genetics, and medical
+        technology to diagnose, treat, and prevent injury and disease, typically
+        through pharmaceuticals or surgery, but also through therapies as
+        diverse as psychotherapy, external splints and traction, medical
+        devices, biologics, and ionizing radiation, amongst others.[1] Medicine
+        has been practiced since prehistoric times, during most of which it was
+        an art (an area of skill and knowledge) frequently having connections to
+        the religious and philosophical beliefs of local culture.
+    
+    </div>
+    </div>
+    <div class="row justify-content-center">
+    <span class="mx-auto">Medicine Expiry:&nbsp <b>{{med.MedExpiry}}</b></span>
+      <span class="mx-auto">Quantity available:&nbsp <b>{{med.MedQuantity}}</b></span>
+      <span class="mx-auto">Medicine for: &nbsp <b>{{med.MedFor}}</b></span>
+  </div>
+    <br>
+    <div class="row justify-content-center">
+      Zipcode: <b>{{med.MedZip}}</b>
+    </div>
+
+    <form action="/medView/{{med.id}}" method="post">
+      {% csrf_token %}
+    <div class="row my-2">
+
+{% if ack %}
+<label class="btn btn-success mx-auto ">Requested donor to approve</label>
+{% else %}
+      <button type="submit" name="rqst_med" id = "rqst_med" data-trigger="hover" class="btn btn-secondary  mx-auto" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Request donor to approve the donation and ask for other details">
+        Request Medicine
+      </button>
+
+      <div class="spinner-border text-warning mx-auto" id="loading" name="loading" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+
+{% endif %}
+
+    </div>
+ 
+    <input type="hidden" name="hid" id="hid" value="false">
+    </form>
+
+  </div>
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $('[data-toggle="popover"]').popover();
+  });
+
+
+$(document).ready(function()
+{
+  $('#loading').hide();
+});
+
+$('#rqst_med').click(function()
+{
+  $('#rqst_med').toggle();
+  $('#loading').toggle();
+});
+
+/*$('#rqst_med').click(function()
+{
+  $('#hid').val("true");
+});*/
+
+</script>
+
+{% endblock %}

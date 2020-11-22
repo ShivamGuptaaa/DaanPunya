@@ -1,0 +1,143 @@
+{% extends "webapp/common.html" %}
+{% block title %}
+  request medicines
+{% endblock title %}
+
+{%block css %} 
+.heightSet { height:45px; }
+.inpWidth { width:155px; text-align:center; } 
+{% endblock %} 
+
+{% block body %}
+  
+<h1 class="text-center">
+    <span class="badge badge-pill badge-warning">Request for medicine here Here</span>
+  </h1>
+  <!-- <div class="shadow-lg p-3 mb-5 bg-white rounded" style="background-color: #e3f2fd;">Hello ____ ,please fill the following details in order to donate medicine</div> -->
+  
+  <div class="alert alert-warning text-danger" align='center' role="alert">
+    <div>
+      <strong
+        >Hello ____ ,please fill the following details in order to donate
+        medicine</strong
+      >
+    </div>
+  </div>
+  
+  <!-- <div class="alert alert-warning text-danger" style="height:40px;" align="center" role="alert">
+      <h6 style="height:10px; font-size:15pt;">Hello ____ ,please fill the following details in order to donate medicine</h6>
+  </div> -->
+  
+  <form action="/rqMed/" method="post">
+    {% csrf_token %}
+    <div class="col-md-7 col-sm-10 mx-auto">
+      <!-- <label class="sr-only" for="inlineFormInputGroup">Username</label> -->
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text inpWidth" style="text-align: center">
+            Name:
+            <h6 style="color: red">*</h6>
+          </div>
+        </div>
+        <input
+          type="text"
+          class="form-control heightSet"
+          name="MedName"
+          id="MedName"
+          placeholder="Medicine Name"
+          required
+        />
+    </div>
+
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text inpWidth">
+            Quantity:
+            <h6 style="color: red">*</h6>
+          </div>
+        </div>
+        <input
+          type="number"
+          class="form-control heightSet"
+          name="MedQuantity"
+          id="MedQuantity"
+          placeholder="Quantity of packets you require"
+          required
+        />
+      </div>
+  
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text inpWidth">For:</div>
+        </div>
+        &nbsp&nbsp
+        <!-- <span class="border border-secondary rounded"> -->
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input heightSet"
+            type="radio"
+            name="MedFor"
+            id="inlineRadio1"
+            value="human"
+            checked
+          />
+          <label class="form-check-label" for="inlineRadio1">Human</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input heightSet"
+            type="radio"
+            name="MedFor"
+            id="inlineRadio2"
+            value="animal"
+          />
+          <label class="form-check-label" for="inlineRadio2">Animal</label>
+          <!-- </span> -->
+        </div>
+      </div>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text inpWidth">
+            Reason:
+            <h6 style="color: red">*</h6>
+          </div>
+        </div>
+        <input
+          type="text"
+          class="form-control heightSet"
+          name="MedReason"
+          id="MedReason"
+          placeholder="What is need of medicine?"
+          required
+        />
+      </div>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text inpWidth">Prescription:<h6 style="color: red">*</h6></div>
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          class="form-control heightSet"
+          name="MedPresc"
+          id="MedPresc"
+          required
+        />
+      </div>
+  
+    
+      <div class="text-center">
+        <button
+          type="submit"
+          id="submit"
+          class="btn btn-danger"
+          data-toggle="tooltip"
+          data-placement="right"
+          title="Submit Details"
+        >
+          Request Medicine
+        </button>
+      </div>
+    </div>
+  </form>
+{% endblock %}
