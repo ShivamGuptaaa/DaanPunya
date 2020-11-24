@@ -63,7 +63,7 @@
 
 
 
-{% if lst %}
+{% if app_med %}
 
 <!-- Here the loop for respective med details starts   -->
 {% for i in app_med %}
@@ -177,6 +177,7 @@ background: linear-gradient(to right, #FF8C00, #000000,#008000); /* W3C, IE 10+/
 <!-- end of looping of available med in lst  -->
 
 {% else %}
+<!-- ==================================================================================================================================== -->
 <h1 class="text-center my-5">You don't have any medicine to show</h1>
 {% endif %}
 <!-- end of if condition which checks med is still in lst or not -->

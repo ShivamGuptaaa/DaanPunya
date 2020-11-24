@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import medicine,rq_medicine,dnr_update,org_update,applied_medicine
+from .models import medicine,rq_medicine,dnr_update,org_update,applied_medicine,dnr_address
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login as user_login ,logout
@@ -64,9 +64,12 @@ def medView(request,id):
         rqst_user_med.rqst_user_email = request.user.email
         rqst_user_med.save()
         print(displayMed)
-        tmp =applied_medicine(med=rqst_user_med.med,user=request.user)
+        displayMed[0].update = True
+        displayMed[0].save
+        # To create applied_medicine table we are using below command
+        tmp = applied_medicine(med=rqst_user_med.med,user=request.user)
         tmp.save()
-        donor = User.objects.get(email=displayMed[0].user_email)
+        donor = displayMed[0].user_email
         subject = 'Your medicine got a receiver'
         message = f'Hi {donor.first_name}{donor.last_name}, {request.user.first_name} has requested to get your {displayMed[0].MedName} medicine, PLease follow the link below for more details are proceed further or to decline the request'
         email_from = settings.EMAIL_HOST_USER 
@@ -127,18 +130,27 @@ def status(request,rq_med_id=0):
             update_med.frm_date = from_date
             update_med.to_date = to_date
             update_med.save()
+            # mail to donor that org has chosen mode of delivery and date range
+            subject = f'Update on your medicine ( {update_med.med.MedName} )'
+            message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
+            email_from = settings.EMAIL_HOST_USER 
+            recipient_list = [update_med.user.email, ] 
+            send_mail( subject, message, email_from, recipient_list )
+
+            print(applied_med.update)
             applied_med.update = True
+            print(applied_med.update)
             applied_med.save()
         else:
             HttpResponse("error")
         med = org_update.objects.filter(user=user)
-        app_med = dnr_update.objects.filter(user=user)
+        app_med = dnr_update.objects.filter(rqst_user_email=user.email)
         med_lst = {'lst' : med,'app_med' : app_med}
         messages.success(request,"Medicne details updated")
         return render(request, 'webapp/status.html' ,med_lst)
     else:
         med = org_update.objects.filter(user=user)
-        app_med = dnr_update.objects.filter(user=user)
+        app_med = dnr_update.objects.filter(rqst_user_email=user.email)
         print(med,app_med)
         med_lst = {'lst' : med,'app_med' : app_med }
         return render(request, 'webapp/status.html' ,med_lst)
@@ -147,10 +159,30 @@ def status1(request,rq_med_id=0):
     med_lst = {}
     user = request.user
     if request.method == "POST":
+        address = request.POST['address']
+        state = request.POST['state']
+        city = request.POST['city']
+        zipcode = request.POST['zipcode']
         sel_date= request.POST['sel_date']
         med_search = dnr_update.objects.filter(med=rq_med_id).first()
+        med_obj = medicine.objects.filter(id=rq_med_id).first()
+        address_save = dnr_address(user=user,med=med_obj)
+        address_save.address=address
+        address_save.state=state
+        address_save.city=city
+        address_save.zipcode=zipcode
+        address_save.save()
         med_search.select_date = sel_date
         med_search.save()
+        org_user = User.objects.filter(email=med_search.rqst_user_email).first()
+        print(org_user)
+        subject = f'Date chosen by donor for {med_search.med.MedName} '
+        message = f'Hi {org_user.first_name}{org_user.last_name}, {user.first_name} {user.last_name} has chosen date of pick up from given range and address is also provided to pickup medicine( Note: All charges for this transaction in delivery of this mediicne will be covered by you ), please click on this below link for selected date http://127.0.0.1:8000/status1 '
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [org_user.email, ] 
+        send_mail( subject, message, email_from, recipient_list )
+
+
         tmp = applied_medicine.objects.filter(med=rq_med_id)
         print(tmp)
         med_lst = dnr_update.objects.filter(user=user)
