@@ -6,6 +6,11 @@
 {% block head %}
 
 <style>
+  body{
+    
+  }
+</style>
+<style>
 
   body {
     background-color: #696969;
@@ -136,21 +141,35 @@ background: linear-gradient(to right, #FF8C00, #000000,#008000); /* W3C, IE 10+/
 
 <!-- If med details is updated then code below will execute -->
 {% else %}
-
 <div class="my-2 row-sm input-group-text bg-info">
-<h6 class="mx-auto">Mode of Delivery chosen: 
-    <!-- This if is used to display the org_pick mode of delivey in normal form instead of abbrevation which is returned from the table  -->
-{% if i.mode_del ==  "org_pick" %}
-    Pickup by organization itself
-    {% else %}
-    {{i.mode_del}}
-{% endif %}
-    </h6>
-<h6 class="mx-auto">Date range is From: {{i.frm_date}}</h6>
-<h6 class="mx-auto">To: {{i.to_date}}</h6>
+  <h6 class="mx-auto">Mode of Delivery chosen: 
+      <!-- This if is used to display the org_pick mode of delivey in normal form instead of abbrevation which is returned from the table  -->
+  {% if i.mode_del ==  "org_pick" %}
+      Pickup by organization itself
+      {% else %}
+      {{i.mode_del}}
+  {% endif %}
+      </h6>
+  <h6 class="mx-auto">Date range is From: {{i.frm_date}}</h6>
+  <h6 class="mx-auto">To: {{i.to_date}}</h6>
+  
+  {% if i.select_date %}
+    <h6 class="mx-auto">Selected date: {{i.select_date}}</h6>
+  {% endif %}
+  </div>
+  
+  {% if i.select_date %}
+  <div class="my-2 row-sm input-group-text bg-primary">
+    <form action="/sendAddress/{{i.med.id}}" id="snd_mail_form" method="post">
+      {% csrf_token %}
+      <div class="" style="">
+  <center><button type="submit" class="bg-primary" style="color: red; padding: 0; border: none; background: none;">Donor have submitted the address to get address click and it will be mailed to you</button></center>
 </div>
-
-
+  </form>
+  </div>
+  {% endif %}
+    
+  
 <div class="input-group-text">
     <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
     <label class="" for="defaultCheck1">

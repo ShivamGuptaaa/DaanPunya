@@ -221,6 +221,24 @@ def rqMed(request):
     return render(request,'webapp/rqMed.html')
 
 
+def sendAddress(request,id=0):
+    if request.method == "POST":
+        user = request.user
+        med = medicine.objects.filter(id=id).first()
+        print(med)
+        address = dnr_address.objects.filter(med=med).first()
+        print(address)
+        subject = f'Address for the medicine ( {med.MedName} )'
+        message = f'Hi {user.first_name} {user.last_name}, address for {med.MedName} is mentioned below \n {address.address} \n City: {address.city} \n State: {address.state} \n Zipcode: {address.zipcode}'
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [user.email, ] 
+        send_mail( subject, message, email_from, recipient_list )
+        med = org_update.objects.filter(user=user)
+        app_med = dnr_update.objects.filter(rqst_user_email=user.email)
+        print(med,app_med)
+        med_lst = {'lst' : med,'app_med' : app_med }
+        return render(request, 'webapp/status.html' ,med_lst)
+
 # APIs
 def handleRegister(request):
     if request.method == 'POST':

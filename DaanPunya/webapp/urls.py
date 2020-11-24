@@ -22,4 +22,5 @@ urlpatterns = [
     path("donateMed/",views.donateMed,name="donateMed"),
     path("handleOtp",views.handleOtp,name="handleOtp"),
     path("rqMed/",views.rqMed,name="rqMed"),
+    path("sendAddress/<int:id>",views.sendAddress,name="sendAddress"),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
