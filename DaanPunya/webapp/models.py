@@ -2,24 +2,35 @@ from django.db import models
 import datetime
 from django.conf import settings
 from django.utils.timezone import now
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model as User
 
 # Create your models here.
+
+class extUser(AbstractUser):
+    is_org = models.BooleanField(default=False)
+    reg_num = models.CharField(max_length=20,blank=True)
+    cert_num = models.CharField(max_length=20,blank=True)
+    phNum = models.IntegerField(default=0,blank=True)
+    address = models.CharField(max_length=200,default="",blank=True)
+
+
 class  medicine(models.Model):
     id=models.AutoField
-    user_email=models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    user_email=models.ForeignKey(User(), default=1, on_delete=models.CASCADE)
     update=models.BooleanField(default=None,null=True)
     MedName=models.CharField(max_length=30)
     MedExpiry=models.CharField(max_length=20,default="")
     MedQuantity=models.IntegerField(default=0)
     MedFor=models.CharField(max_length=10,default="")
     MedReason=models.CharField(max_length=100,default="",blank=True)
-    MedPresc=models.ImageField(upload_to="webapp/images",default="",blank=True)
-    MedPic=models.ImageField(upload_to="webapp/images",default="")
-    MedPic2=models.ImageField(upload_to="webapp/images",default="",blank=True)
+    MedPresc=models.ImageField(upload_to="images/",default="",blank=True)
+    MedPic=models.ImageField(upload_to="images/",default="")
+    MedPic2=models.ImageField(upload_to="images/",default="",blank=True)
     MedAddress=models.CharField(max_length=50,default="",blank=True)
-    MedZip=models.CharField(default="0",max_length=6)
+    MedZip=models.CharField(default="0",max_length=6,blank=True)
     MedDate=models.DateField(default=datetime.date.today)
 
     def __str__(self):
@@ -29,7 +40,7 @@ state_choices = (("Andhra Pradesh","Andhra Pradesh"),("Arunachal Pradesh ","Arun
 
 class dnr_address(models.Model):
     med = models.ForeignKey(medicine, on_delete=models.CASCADE,null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(User(), on_delete=models.CASCADE,null=True)
     address = models.CharField(max_length = 300,null=True)
     zipcode = models.IntegerField(null=True)
     city = models.CharField(max_length=20,null=True)
@@ -42,7 +53,7 @@ class dnr_address(models.Model):
 
 class rq_medicine(models.Model):
     id=models.AutoField(primary_key = True)
-    user_email=models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    user_email=models.ForeignKey(User(), default=1, on_delete=models.CASCADE)
     update=models.BooleanField(default=False)
     MedName=models.CharField(max_length=30)
     MedQuantity=models.IntegerField()
@@ -63,7 +74,7 @@ del_choice = {
 
 class applied_medicine(models.Model):
     med = models.ForeignKey(medicine, on_delete=models.CASCADE)
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    user= models.ForeignKey(User(), on_delete=models.CASCADE)
     date= models.DateField(default=now)
 
 
@@ -71,7 +82,7 @@ class applied_medicine(models.Model):
         return self.med.MedName
 
 class org_update(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User(), on_delete=models.CASCADE)
     rq_med = models.ForeignKey(rq_medicine, on_delete=models.CASCADE)
     rqst_med = models.BooleanField(default=False)
     mode_del = models.CharField(max_length=50 ,choices=del_choice)
@@ -84,7 +95,7 @@ class org_update(models.Model):
 
 class dnr_update(models.Model):
     med = models.ForeignKey(medicine, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User(), on_delete=models.CASCADE)
     donor_address = models.ForeignKey(dnr_address,on_delete=models.CASCADE,null=True)
     mode_del = models.CharField(default=None,max_length=30,choices=del_choice,null=True)
     frm_date = models.DateField(default=None,null=True)

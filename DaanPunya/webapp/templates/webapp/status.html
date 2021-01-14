@@ -6,12 +6,6 @@
 {% block head %}
 
 <style>
-  body{
-    
-  }
-</style>
-<style>
-
   body {
     background-color: #696969;
   }
@@ -80,8 +74,8 @@ border-radius: 1.8rem;
 
 
 background: #1a2a6c;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #FF8C00, #000000,#008000);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #FF8C00, #000000,#008000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+">
+background: -webkit-linear-gradient(to right, #0af502, rgb(6, 255, 101),#0af502);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #0af502, rgb(6, 255, 101),#0af502); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+">
   <h1 class="display-4">{{i.med.MedName}}</h1>
   <p class="lead">{{i.med.MedReason}}</p>
   <div class="row">
@@ -89,7 +83,7 @@ background: linear-gradient(to right, #FF8C00, #000000,#008000); /* W3C, IE 10+/
       <h6 class="ml-5">Medicine For: {{i.med.MedFor}}</h6>
   </div>
 
- <!-- This if condition is used to know that whetherthere is any update in medicine or not since it has been rwquested by org    -->
+ <!-- This if condition is used to know that whether there is any update in medicine or not since it has been rwquested by org    -->
   {% if not i.med.update %}
       
 <form action="/status/{{i.med.id}}" method="post">
@@ -128,9 +122,9 @@ background: linear-gradient(to right, #FF8C00, #000000,#008000); /* W3C, IE 10+/
   </div>
 </form>
   <div class="row">
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">mode of del</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">date range</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">medicine received</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: blue;" class="progress-indicator">mode of del</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: blue;" class="progress-indicator">date range</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: blue;" class="progress-indicator">medicine received</h6></div>
       
   </div>
   <div class="progress bg-dark" style="height: 35px;">

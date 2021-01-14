@@ -1,0 +1,167 @@
+{% extends 'webapp/common.html' %}
+{% block title %} Register {% endblock %}
+{% block css %}
+.inpWidth {
+width:100px;
+text-align:center;
+}
+
+h6 {
+height:13px;
+}
+
+{% endblock %}
+{% block body %}
+<!--  <div class="shadow p-3 mb-2 bg-info text-white">DaanPunya.in</div>-->
+
+  <form class="px-4 py-3" method='post' action='/handleOrgRegister'>
+    {% csrf_token %}
+<div class="row justify-content-center">  
+<div class="col-md-8 col-sm-auto">
+  <div class="input-group mb-3 mt-0">
+
+
+  <div class="input-group">
+  <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">First Name<h6 style="color:red">*</h6></span>
+  </div>
+      <input type="text" name="Fname" aria-label="First name" class="form-control mr-2" placeholder="First Name" required>
+
+      <div class="input-group-prepend">
+        <span class="input-group-text inpWidth">Last Name<h6 style="color:red">*</h6></span>
+      </div>
+          <input type="text" name="Lname" aria-label="Last name" class="form-control" placeholder="Last Name" required>
+</div>
+
+      <div class="input-group  mt-2">
+  <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Password<h6 style="color:red">*</h6></span>
+  </div>
+      <input type="password" name="password" placeholder="Password" aria-label="Password" class="form-control" required>
+</div>
+
+<div class="input-group mb-2 mt-2">
+    <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Email<h6 style="color:red">*</h6></span>
+  </div>
+  <input type="email" class="form-control" name="email" id="email" placeholder="Email ID" aria-label="Email ID" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <span class="input-group-text" id="basic-addon2">name@example.com</span>
+  </div>
+</div>
+
+<div class="input-group mb-2 mt-2">
+    <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Reg Num<h6 style="color:red">*</h6></span>
+  </div>
+  <input type="text" class="form-control" name="reg_num" id="reg_num" placeholder="Registeration number format" aria-label="registeration_num" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <span class="input-group-text" id="basic-addon2"></span>
+  </div>
+</div>
+
+<div class="input-group mb-2 mt-2">
+    <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Certificate<h6 style="color:red">*</h6></span>
+  </div>
+  <input type="text" class="form-control" name="cert_num" id="cert_num" placeholder="Certification number format" aria-label="certificate_num" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <span class="input-group-text" id="basic-addon2"></span>
+  </div>
+</div>
+
+<div class="input-group mb-2 mt-2">
+    <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Phone no.<h6 style="color:red">*</h6></span>
+  </div>
+  <input type="phone" class="form-control" name="phone" id="phone" placeholder="Phone number" aria-label="phone_num" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <span class="input-group-text" id="basic-addon2"></span>
+  </div>
+</div>
+
+<div class="input-group mb-2 mt-2">
+    <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Address<h6 style="color:red">*</h6></span>
+  </div>
+  <input type="text" class="form-control" name="address" id="address" placeholder="Address" aria-label="address" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <span class="input-group-text" id="basic-addon2"></span>
+  </div>
+</div>
+
+<!-- <div class="input-group mb-2 mt-0">
+    <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">OTP<h6 style="color:red">*</h6></span>
+  </div>
+    <input type="text" class="form-control" placeholder="Enter OTP" aria-label="Email ID" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+    <button type="button" class="btn btn-outline-secondary">confirm</button>
+  </div>
+</div> -->
+
+    <div class="mx-auto">
+      <button type="submit" class="btn btn-primary">Next</button>
+  </div>
+  </div>
+  <div class="text-center">
+    <a class="btn btn-warning" href="/login">Already a member! <b>Login</b></a>
+</div>
+</div>
+</div>
+</form>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+<!-- Registration Number, Tax Exemption Certificate and annual financial statements -->
+
+
+
+
+
+
+
+
+<!-- <div class="input-group mb-2 mt-2">
+  <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Gender<h6 style="color:red">*</h6></span>
+  </div>
+    <select class="form-control">
+  <option value="1">Male</option>
+  <option value="2">Female</option>
+  <option value="3">Others</option>
+</select>
+</div> -->
+<!--  
+<div class="input-group mb-2 mt-2">
+  <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">DOB<h6 style="color:red">*</h6></span>
+  </div>
+    <input type="date" class="form-control">
+</div>
+
+  <div class="input-group mb-2 mt-2">
+  <div class="input-group-prepend">
+    <span class="input-group-text inpWidth">Address<h6 style="color:red">*</h6></span>
+  </div>
+
+
+  <div class="form-row">
+    <div class="col-7">
+      <input type="text" class="form-control" placeholder="City">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" placeholder="State">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Zip">
+    </div> 
+
+    </div>
+  </div> -->

@@ -58,8 +58,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'daanpunya123@gmail.com'
-EMAIL_HOST_PASSWORD = 'daanpunya@12345'
+EMAIL_HOST_USER = 'daanpunya1@gmail.com'
+EMAIL_HOST_PASSWORD = 'daanpunya@123'
 
 TEMPLATES = [
     {
@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'DaanPunya.wsgi.application'
 DATABASES = {
     'default':{
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'daanpunya_new',
+        'NAME': 'daanpunya2',
         'USER' : 'shivam',
         'PASSWORD': 'root',
         'HOST': 'localhost',
@@ -122,6 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'webapp.extUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

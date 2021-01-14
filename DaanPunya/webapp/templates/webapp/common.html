@@ -70,15 +70,28 @@
             </div>
           </div>
           </li>
+          {% if user.is_org %}
+          <!-- if user is org  -->
+
           <li class="nav-item">
-            <a class="nav-link active" href="/donateMed">Donate</a>
+            <a class="nav-link" href="/rqMed">Request Medicine</a>
           </li>
+          
           <li class="nav-item">
             <a class="nav-link" href="/status">Status</a>
           </li>
+
+          {% else %}
+          <!-- if user is donor  -->
           <li class="nav-item">
-            <a class="nav-link" href="/status1">Status1</a>
+            <a class="nav-link active" href="/donateMed">Donate</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/status1">Status</a>
+          </li>
+          {% endif %}
+
           <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
           </li>
@@ -90,6 +103,7 @@
           </li>
         </ul>
       
+        {% if user.is_org %}
     <form class="form-inline my-2 my-lg-0" action="/searchResult">
       <input
         class="form-control mr-sm-2"
@@ -107,6 +121,7 @@
         Search
       </button>
     </form>
+    {% endif %}
   </div>
 </nav>
 

@@ -2,19 +2,31 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import medicine,rq_medicine,dnr_update,org_update,applied_medicine,dnr_address
 from django.contrib import messages
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model 
 from django.contrib.auth import authenticate,login as user_login ,logout
 from django.contrib.auth.decorators import login_required
 from django.conf import settings 
 from django.core.mail import send_mail 
 import random
 
+User = get_user_model()
+
+#for basic registeration
 fname=''
 lname=''
 email=''
 password=''
 username=''
+
+#To pass generated otp value
 gen_otp=0
+
+#for org registeration
+reg_num=''
+cert_num=''
+phone=''
+address=''
 
 # Functions for Html pages
 def index(request):
@@ -25,6 +37,9 @@ def login(request):
 
 def register(request):
     return render(request,'webapp/register.html')
+
+def orgRegister(request):
+    return render(request,'webapp/orgRegister.html')
 
 def about(request): 
     return render(request, 'webapp/about.html')
@@ -42,22 +57,23 @@ def donateMed(request):
         MedFor=request.POST['MedFor']
         MedReason=request.POST['MedReason']
         MedPresc=request.POST['MedPresc']
-        MedPic=request.POST.get('MedPic')
-        MedPic2=request.POST['MedPic2']
-        MedAddress=request.POST['MedAddress']
-        MedZip=request.POST['MedZip']
+        MedPic=request.FILES.get('MedPic')
+        MedPic2=request.FILES.get('MedPic2')
+        # MedAddress=request.POST['MedAddress']
+        # MedZip=request.POST['MedZip']
         ins = medicine(user_email=user_email,MedName=MedName,MedExpiry=MedExpiry,MedQuantity=MedQuantity,MedFor=MedFor,
-                       MedReason=MedReason,MedPresc=MedPresc,MedPic=MedPic,MedPic2=MedPic2,MedAddress=MedAddress,
-                       MedZip=MedZip)
+                       MedReason=MedReason,MedPresc=MedPresc,MedPic=MedPic,MedPic2=MedPic2)
         ins.save()
         messages.success(request,"Your submission to donate medicine is successfull , THANKYOU!")
         update = dnr_update(user=request.user, med=ins)
         update.save()
+        return redirect('status1')
     return render(request, 'webapp/donateMed.html')
 
 @login_required(login_url='/login/')
 def medView(request,id):
     displayMed = medicine.objects.filter(id=id)
+    params = {'med': displayMed[0]}
     if request.method == 'POST':
         rqst_user_med = dnr_update.objects.filter(med=displayMed[0]).first()
         print(rqst_user_med)
@@ -76,7 +92,9 @@ def medView(request,id):
         recipient_list = [donor.email, ] 
         send_mail( subject, message, email_from, recipient_list ) 
         return render(request, 'webapp/medView.html',{'med': displayMed[0],'ack': 'Requested to donor for medicine'})
-    return render(request, 'webapp/medView.html',{'med': displayMed[0]})
+    if displayMed[0].update:
+        params = {'med': displayMed[0],'ack': 'Requested to donor for medicine'}
+    return render(request, 'webapp/medView.html',params)
 
 @login_required(login_url='/login/')
 def searchResult(request):
@@ -88,8 +106,8 @@ def searchResult(request):
         flag=None
     else:
         searchMed = request.GET['searchMed']
-        meds = medicine.objects.filter(MedName__iexact = searchMed)
-        similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed)
+        meds = medicine.objects.filter(MedName__iexact = searchMed).exclude(update = True)
+        similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed).exclude(update = True)
         if meds and similar_meds :
             flag=None
         if not meds and not similar_meds :
@@ -131,11 +149,11 @@ def status(request,rq_med_id=0):
             update_med.to_date = to_date
             update_med.save()
             # mail to donor that org has chosen mode of delivery and date range
-            subject = f'Update on your medicine ( {update_med.med.MedName} )'
-            message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
-            email_from = settings.EMAIL_HOST_USER 
-            recipient_list = [update_med.user.email, ] 
-            send_mail( subject, message, email_from, recipient_list )
+            # subject = f'Update on your medicine ( {update_med.med.MedName} )'
+            # message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
+            # email_from = settings.EMAIL_HOST_USER 
+            # recipient_list = [update_med.user.email, ] 
+            # send_mail( subject, message, email_from, recipient_list )
 
             print(applied_med.update)
             applied_med.update = True
@@ -176,15 +194,13 @@ def status1(request,rq_med_id=0):
         med_search.save()
         org_user = User.objects.filter(email=med_search.rqst_user_email).first()
         print(org_user)
-        subject = f'Date chosen by donor for {med_search.med.MedName} '
-        message = f'Hi {org_user.first_name}{org_user.last_name}, {user.first_name} {user.last_name} has chosen date of pick up from given range and address is also provided to pickup medicine( Note: All charges for this transaction in delivery of this mediicne will be covered by you ), please click on this below link for selected date http://127.0.0.1:8000/status1 '
-        email_from = settings.EMAIL_HOST_USER 
-        recipient_list = [org_user.email, ] 
-        send_mail( subject, message, email_from, recipient_list )
-
+        # subject = f'Date chosen by donor for {med_search.med.MedName} '
+        # message = f'Hi {org_user.first_name}{org_user.last_name}, {user.first_name} {user.last_name} has chosen date of pick up from given range and address is also provided to pickup medicine( Note: All charges for this transaction in delivery of this mediicne will be covered by you ), please click on this below link for selected date http://127.0.0.1:8000/status1 '
+        # email_from = settings.EMAIL_HOST_USER 
+        # recipient_list = [org_user.email, ] 
+        # send_mail( subject, message, email_from, recipient_list )
 
         tmp = applied_medicine.objects.filter(med=rq_med_id)
-        print(tmp)
         med_lst = dnr_update.objects.filter(user=user)
         meds= {'lst': med_lst,'app_med': tmp}
         messages.success(request,"Medicine details updated")
@@ -257,14 +273,47 @@ def handleRegister(request):
         global gen_otp
         gen_otp= str(random.randint(1000,9999))
         print(gen_otp)
-        subject = 'Danpunya'
-        message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
-        email_from = settings.EMAIL_HOST_USER 
-        recipient_list = [email, ] 
-        send_mail( subject, message, email_from, recipient_list ) 
+        # subject = 'Danpunya'
+        # message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
+        # email_from = settings.EMAIL_HOST_USER 
+        # recipient_list = [email, ] 
+        # send_mail( subject, message, email_from, recipient_list ) 
         return render(request, 'webapp/checkOtp.html')
     else:
         return render(request, 'webapp/register.html')
+
+def handleOrgRegister(request):
+    if request.method == 'POST':
+        #Extracting POST parameters
+        global username
+        global fname
+        global lname
+        global password
+        global email
+        global cert_num
+        global reg_num
+        global phone
+        global address
+        fname=request.POST['Fname']
+        lname=request.POST['Lname']
+        email=request.POST['email']
+        password=request.POST['password']
+        reg_num=request.POST['reg_num']
+        cert_num=request.POST['cert_num']
+        phone=request.POST['phone']
+        address=request.POST['address']
+        username=email
+        global gen_otp
+        gen_otp= str(random.randint(1000,9999))
+        print(gen_otp)
+        # subject = 'Danpunya'
+        # message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
+        # email_from = settings.EMAIL_HOST_USER 
+        # recipient_list = [email, ] 
+        # send_mail( subject, message, email_from, recipient_list ) 
+        return render(request, 'webapp/checkOtp.html')
+    else:
+        return render(request, 'webapp/orgRegister.html')
 
 def handleOtp(request):
     if request.method == 'POST':
@@ -275,16 +324,44 @@ def handleOtp(request):
         global lname
         global password
         global email
+        global cert_num
+        global reg_num
+        global phone
+        global address
+
         print(gen_otp)
-        if otp == gen_otp:
-            MyUser =User.objects.create_user(username,email=email,password=password)
-            MyUser.first_name=fname
-            MyUser.last_name=lname
-            MyUser.save()
-            messages.success(request,"Your DaanPunya account has been successfully created")
-            return render(request, 'webapp/login.html')
+
+        if (cert_num=='' and reg_num =='' and phone == '' and address == ''):
+
+            if otp == gen_otp:
+                MyUser =User.objects.create_user(username,email=email,password=password)
+                MyUser.first_name=fname
+                MyUser.last_name=lname
+                MyUser.save()
+                messages.success(request,"Your DaanPunya account has been successfully created")
+                return render(request, 'webapp/login.html')
+            else:
+                messages.error(request,"Your OTP didn't matched , PLease Try Again","danger")
+                return redirect('home')
+        elif (cert_num is not '' and reg_num is not '' and phone is not '' and address is not ''):
+            if otp == gen_otp:
+                MyUser =User.objects.create_user(username,email=email,password=password)
+                MyUser.first_name=fname
+                MyUser.last_name=lname
+                MyUser.is_org =True
+                MyUser.reg_num=reg_num
+                MyUser.cert_num=cert_num
+                MyUser.phNum=phone
+                MyUser.address=address
+                MyUser.save()
+                reg_num = cert_num = phone = address = ''
+                messages.success(request,"Your DaanPunya account has been successfully created")
+                return render(request, 'webapp/login.html')
+            else:
+                messages.error(request,"Your OTP didn't matched , PLease Try Again","danger")
+                return redirect('home')
         else:
-            messages.error(request,"Your OTP didn't matched , PLease Try Again","danger")
+            messages.error(request,"Please enter all credentials","danger")
             return redirect('home')
     else:
         return render(request, 'webapp/register.html')
@@ -297,9 +374,10 @@ def handleLogin(request):
         if user is not None:
             user_login(request,user)
             messages.success(request,"Successfully LOGGED IN")
-            if request.POST.get('next'):
-                return redirect(request.POST['next'])
-            return redirect('home')
+            if request.GET.get('next'):
+                return redirect(request.GET('next'))
+            else:
+                return redirect('home')
         else:
             messages.error(request,"Wrong credentials provoided","danger")
             return redirect('home')
@@ -310,4 +388,3 @@ def handleLogout(request):
     logout(request) 
     messages.success(request,"Successfully LOGGED OUT","warning")
     return redirect('home')
-

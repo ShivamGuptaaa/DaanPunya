@@ -10,9 +10,9 @@
     border-radius: 1.8rem;
     
   
-    background: #1a2a6c;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
+    background: #98FB98;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #008000, #ADFF2F, #00FF7);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #008000, #ADFF2F, #00FF7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
 }
 
 {% endblock css %}
@@ -71,6 +71,7 @@
 <div class="container">
 <div class="jumbotron my-3">
   <h1 class="display-4">{{i.med.MedName}}</h1>
+  <hr class="my-1">
   <p class="lead">{{i.med.MedReason}}</p>
   <div class="row">
       <h6 class="ml-5">Medicine Expiry: {{i.med.MedExpiry}}</h6>
@@ -78,6 +79,15 @@
       <h6 class="ml-5">Medicine For: {{i.med.MedFor}}</h6>
   </div>
 
+<!-- This if condition is to check whether org has requested for that particular medicine or not, if not display no update-->
+{% if not i.med.update %}
+<h2 style="color:maroon;" class="text-center">Currently there is no update on this medicine</h2>  
+</div>
+</div>
+
+
+{% else %}
+  
  <!-- This if condition is used to know that whether there is any update in medicine or not since it has been requested by org    -->
   {% if not i.select_date %}
       
@@ -149,11 +159,11 @@
   </div>
 </form>
   <div class="row">
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Medicine uploaded</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">org requested for med</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Delivery mode: {{i.mode_del}}</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Date selected:</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Med dispatched</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Medicine uploaded</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">org requested for med</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Delivery mode: {{i.mode_del}}</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Date selected:</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Med dispatched</h6></div>
   </div>
   <div class="progress bg-dark" style="height: 35px;">
     <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" name="progressbar" id="progressbar" role="progressbar" style="width: 01%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
@@ -186,11 +196,11 @@
     </label>
   </div>
   <div class="row">
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Medicine uploaded:</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">org requested for med</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Delivery mode: {{i.mode_del}}</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Date selected:</h6></div>
-      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">Med dispatched</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Medicine uploaded:</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">org requested for med</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Delivery mode: {{i.mode_del}}</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Date selected:</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Med dispatched</h6></div>
     </div>
   <div class="progress bg-dark" style="height: 35px;">
     <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 66.66%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
@@ -200,6 +210,8 @@
 
 {% endif %}
 <!-- end of if condition which checks med update  -->
+
+{% endif %}
 
 {% endfor %}
 <!-- end of looping of available med in lst  -->
