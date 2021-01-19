@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import medicine,rq_medicine,dnr_update,org_update,applied_medicine,dnr_address
+from .models import medicine,rq_medicine,dnr_update,org_update,applied_medicine,dnr_address,reg_org
 from django.contrib import messages
 # from django.contrib.auth.models import User
+from django.db.models import Q
 from django.contrib.auth import get_user_model 
 from django.contrib.auth import authenticate,login as user_login ,logout
 from django.contrib.auth.decorators import login_required
@@ -149,11 +150,11 @@ def status(request,rq_med_id=0):
             update_med.to_date = to_date
             update_med.save()
             # mail to donor that org has chosen mode of delivery and date range
-            # subject = f'Update on your medicine ( {update_med.med.MedName} )'
-            # message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
-            # email_from = settings.EMAIL_HOST_USER 
-            # recipient_list = [update_med.user.email, ] 
-            # send_mail( subject, message, email_from, recipient_list )
+            subject = f'Update on your medicine ( {update_med.med.MedName} )'
+            message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
+            email_from = settings.EMAIL_HOST_USER 
+            recipient_list = [update_med.user.email, ] 
+            send_mail( subject, message, email_from, recipient_list )
 
             print(applied_med.update)
             applied_med.update = True
@@ -194,11 +195,11 @@ def status1(request,rq_med_id=0):
         med_search.save()
         org_user = User.objects.filter(email=med_search.rqst_user_email).first()
         print(org_user)
-        # subject = f'Date chosen by donor for {med_search.med.MedName} '
-        # message = f'Hi {org_user.first_name}{org_user.last_name}, {user.first_name} {user.last_name} has chosen date of pick up from given range and address is also provided to pickup medicine( Note: All charges for this transaction in delivery of this mediicne will be covered by you ), please click on this below link for selected date http://127.0.0.1:8000/status1 '
-        # email_from = settings.EMAIL_HOST_USER 
-        # recipient_list = [org_user.email, ] 
-        # send_mail( subject, message, email_from, recipient_list )
+        subject = f'Date chosen by donor for {med_search.med.MedName} '
+        message = f'Hi {org_user.first_name}{org_user.last_name}, {user.first_name} {user.last_name} has chosen date of pick up from given range and address is also provided to pickup medicine( Note: All charges for this transaction in delivery of this mediicne will be covered by you ), please click on this below link for selected date http://127.0.0.1:8000/status1 '
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [org_user.email, ] 
+        send_mail( subject, message, email_from, recipient_list )
 
         tmp = applied_medicine.objects.filter(med=rq_med_id)
         med_lst = dnr_update.objects.filter(user=user)
@@ -273,11 +274,11 @@ def handleRegister(request):
         global gen_otp
         gen_otp= str(random.randint(1000,9999))
         print(gen_otp)
-        # subject = 'Danpunya'
-        # message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
-        # email_from = settings.EMAIL_HOST_USER 
-        # recipient_list = [email, ] 
-        # send_mail( subject, message, email_from, recipient_list ) 
+        subject = 'Danpunya'
+        message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [email, ] 
+        send_mail( subject, message, email_from, recipient_list ) 
         return render(request, 'webapp/checkOtp.html')
     else:
         return render(request, 'webapp/register.html')
@@ -302,16 +303,22 @@ def handleOrgRegister(request):
         cert_num=request.POST['cert_num']
         phone=request.POST['phone']
         address=request.POST['address']
-        username=email
-        global gen_otp
-        gen_otp= str(random.randint(1000,9999))
-        print(gen_otp)
-        # subject = 'Danpunya'
-        # message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
-        # email_from = settings.EMAIL_HOST_USER 
-        # recipient_list = [email, ] 
-        # send_mail( subject, message, email_from, recipient_list ) 
-        return render(request, 'webapp/checkOtp.html')
+        org = (reg_org.objects.filter(Q(reg_num = reg_num) , Q(cert_num__iexact = cert_num)))
+        print(org)
+        if not org:
+            messages.error(request,"Please enter proper registeration number or tax exemption certificate number","danger")
+            return redirect('orgRegister')
+        else: 
+            username=email
+            global gen_otp
+            gen_otp= str(random.randint(1000,9999))
+            print(gen_otp)
+            subject = 'Danpunya'
+            message = f'Hi {fname}, your OTP to register in Daanpunya is {gen_otp}'
+            email_from = settings.EMAIL_HOST_USER 
+            recipient_list = [email, ] 
+            send_mail( subject, message, email_from, recipient_list ) 
+            return render(request, 'webapp/checkOtp.html')
     else:
         return render(request, 'webapp/orgRegister.html')
 

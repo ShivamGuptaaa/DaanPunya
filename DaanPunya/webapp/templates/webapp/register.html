@@ -14,7 +14,7 @@ height:13px;
 {% block body %}
 <!--  <div class="shadow p-3 mb-2 bg-info text-white">DaanPunya.in</div>-->
 
-  <form class="px-4 py-3" method='post' action='/handleRegister'>
+  <form class="px-4 py-3" id="reg" method='post' action='/handleRegister'>
     {% csrf_token %}
 <div class="row justify-content-center">  
 <div class="col-md-8 col-sm-auto">
@@ -25,20 +25,43 @@ height:13px;
   <div class="input-group-prepend">
     <span class="input-group-text inpWidth">First Name<h6 style="color:red">*</h6></span>
   </div>
-      <input type="text" name="Fname" aria-label="First name" class="form-control mr-2" placeholder="First Name" required>
+      <input type="text" name="Fname" aria-label="First name" class="form-control mr-2" placeholder="First Name">
 
       <div class="input-group-prepend">
         <span class="input-group-text inpWidth">Last Name<h6 style="color:red">*</h6></span>
       </div>
-          <input type="text" name="Lname" aria-label="Last name" class="form-control" placeholder="Last Name" required>
+          <input type="text" name="Lname" aria-label="Last name" class="form-control" placeholder="Last Name">
 </div>
 
       <div class="input-group  mt-2">
   <div class="input-group-prepend">
     <span class="input-group-text inpWidth">Password<h6 style="color:red">*</h6></span>
   </div>
-      <input type="password" name="password" placeholder="Password" aria-label="Password" class="form-control" required>
-</div>
+      <input type="password" name="password" id="password" placeholder="Password" aria-label="Password" class="form-control">
+      <div class="input-group-append">
+        <span class="input-group-text showPass" id="basic-addon2" toggle="#password">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+        </svg>
+      </span>
+      </div>
+  </div>
+
+  <div class="input-group  mt-2">
+    <div class="input-group-prepend">
+      <span class="input-group-text inpWidth">Confirm Password<h6 style="color:red">*</h6></span>
+    </div>
+      <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" aria-label="Confirm_Password" class="form-control">
+      <div class="input-group-append">
+        <span class="input-group-text showPass" id="basic-addon2" toggle="#confirm_password">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+        </svg>
+      </span>
+      </div>
+  </div>
 
 <div class="input-group mb-2 mt-2">
     <div class="input-group-prepend">
@@ -64,9 +87,18 @@ height:13px;
 </div> -->
 
     <div class="mx-auto">
-      <button type="submit" class="btn btn-primary">Next</button>
+      <button type="submit" id="next" class="btn btn-primary">Next</button>
   </div>
+
+  <div class="spinner-border text-warning mx-auto" id="loading" name="loading" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
+
+  </div>
+  <div class="text-center my-2">
+    <a class="btn btn-warning" href="/orgRegister">Register as <b>Organization</b></a>
+</div>
+
   <div class="text-center">
     <a class="btn btn-warning" href="/login">Already a member! <b>Login</b></a>
 </div>
@@ -74,6 +106,56 @@ height:13px;
 </div>
 </form>
 </div>
+
+<script>
+  $("input").prop('required',true);
+  
+  $(document).ready(function()
+  {
+    $('#loading').hide();
+  });
+  
+  $('#reg').submit(function()
+  {
+    $('#next').toggle();
+    $('#loading').toggle();
+  });
+
+  var password = document.getElementById("password")
+  , confirm_password = document.getElementById("confirm_password");
+
+function validatePassword(){
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+
+/*function showPass() {
+  var x = document.getElementById("show_pass");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}*/
+
+$(".showPass").click(function() {
+
+  $(this).toggleClass("showPass");
+  var input = $($(this).attr("toggle"));
+  if (input.attr("type") == "password") {
+    input.attr("type", "text");
+  } else {
+    input.attr("type", "password");
+  }
+});
+</script>
+
 {% endblock %}
 
 

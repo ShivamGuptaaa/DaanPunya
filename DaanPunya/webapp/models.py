@@ -108,9 +108,18 @@ class dnr_update(models.Model):
         return self.med.MedName
         
 
+class reg_org(models.Model):
+    name = models.CharField(max_length = 50)
+    reg_num = models.IntegerField()
+    cert_num = models.CharField(max_length =20)
+    contact_num = models.BigIntegerField()
+    address = models.CharField(max_length = 200,blank=True)
+    email = models.CharField(max_length = 50,blank=True)
+
+    def __str__(self):
+        return self.name
 
 
-    
 
 # update
 
