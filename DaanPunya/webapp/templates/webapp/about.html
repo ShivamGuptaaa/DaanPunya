@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>About</h1>
-</body>
-</html>
+{% extends 'webapp/common.html' %}
+{% block title %}
+  About Us
+{% endblock title %}
+
+{% block body %}
+<div class="container">
+•	There are many NGOs that works for old age, orphans shelter, animals shelter, etc. So, such type of organizations needs medicines for people/animals in their shelter.
+•	As they run shelters usually they have doctors available who provide services for organization who prescribe medicines accordingly.
+•	Here the motive of this website will be that the unused medicines can be collected according to the requirements specified by the NGOs.
+•	This website will have 2 specific registration/login process 
+a. NGO Login
+b. Member Login (Basically member is a user who wants to donate) 
+•	When the NGO registers itself to this website, they would have to attach the legal documents, licenses of its organization which will be cross checked by the group of admins, only after its verification the organization can have its successful registration.
+•	For member registration he/she needs to give their basic details including address. Whenever if they want to donate they can upload details of the medicine online which later will be shown as result if anyone searches for it.
+
+</div>
+{% endblock body %}

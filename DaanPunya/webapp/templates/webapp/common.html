@@ -7,7 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
+{%load static%}
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -19,6 +19,31 @@
     <title>{% block title %} {% endblock %}</title>
     <style>
       {% block css %} {% endblock %}
+      body{
+        background-image: url({%static 'bg.jpg'%});
+        }
+       /* footer {
+         width:100%;
+          position: fixed;
+          bottom: 0;
+        }*/
+      .footer_img:hover {  
+        opacity: 0.5;  
+      } 
+      
+      .footer_img{
+      border-radius:50%;
+      }
+
+      .footer_link{
+        color:rgb(226, 155, 68);
+        font-size: x-large;
+        font-family: garamond;
+      }
+      .footer_link:hover{
+        opacity:0.4 ;
+        color:chartreuse;
+      }
     </style>
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
@@ -26,7 +51,8 @@
       crossorigin="anonymous"
     ></script>
 
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     {% block head %}
       
     {% endblock head %}
@@ -35,18 +61,17 @@
 
   <body>
 <!-- --------------------------------------------------------------------------------------------------------------------------------------- -->
-
 <!-- If User is authenticated then only their respective fields will be shown -->
  {% if user.is_authenticated %}
 
     <!--  Navigation Bar-->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #12b296;"> 
       <a
         class="navbar-brand"
         href="/"
         data-toggle="tooltip"
         data-placement="bottom"
-        title="HomePage">DaanPunya.in</a>
+        title="HomePage">DaanPunya</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -62,7 +87,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <div class="btn-group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" style="background-color: #058f71;color:#edf2f5" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {{user.first_name}}
             </button>
             <div class="dropdown-menu">
@@ -73,33 +98,33 @@
           {% if user.is_org %}
           <!-- if user is org  -->
 
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/rqMed">Request Medicine</a>
           </li>
           
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/status">Status</a>
           </li>
 
           {% else %}
           <!-- if user is donor  -->
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link active" href="/donateMed">Donate</a>
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/status1">Status</a>
           </li>
           {% endif %}
 
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/about">About</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/contact">Contact Us</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/termsnCon">Terms & Conditions</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="/term">Terms & Conditions</a>
           </li>
         </ul>
       
@@ -128,14 +153,14 @@
  {% else %}
 <!-- If user is not logged in then this default page will be shown to each and every visitor -->
   <!--  Navigation Bar-->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #12b296;">
     <a
       class="navbar-brand"
       href="/"
       data-toggle="tooltip"
       data-placement="bottom"
       title="HomePage"
-      >DaanPunya.in</a
+      >DaanPunya</a
     >
     <button
       class="navbar-toggler"
@@ -153,18 +178,21 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
           <a class="nav-link" href="/login"
-            >SignIn/SignUp <span class="sr-only">(current)</span></a>
+            >Login <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="/about">About</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="/contact">Contact Us</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/termsnCon">Terms & Conditions</a>
+        <li class="nav-item active">
+          <a class="nav-link" href="/term">Terms & Conditions</a>
         </li>
       </ul>
+      <div class="float-right active nav-item mr-2">
+      <a href="/register" class="mr-sm-2 nav-link " style="color:antiquewhite">New User?</a>
+    </div>
     </div>
   </nav>
 
@@ -203,5 +231,22 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
+    <footer style="background-image: url({%static 'download.jpg'%}); color:white">
+      <div class="row my-1" >
+        <div class="col my-auto">
+          <div class="row ">
+          <a href="/term" class="footer_link col text-center my-2">Terms & Condition</a>
+          <a href="/about" class="footer_link col text-center my-2">About Us</a>
+        <a href="/contact" class="footer_link col text-center my-2">Contact Us</a>
+        </div>
+      </div>
+      </div>
+          <div class="row justify-content-center">
+    <a href="https://facebook.com"><img src="{% static 'facebook.jpeg' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a><br>
+    <a href="https://instagram.com"><img src="{% static 'insta.jpg' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a><br>
+    <a href="https:// twitter.com"><img src="{% static 'twitter.png' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a>
+  </div>
+      <div class="row justify-content-center text-center mb-1">&copy;ALL RIGHTS RESERVED by Shivam & Muskan. <br> VSIT final year project</div>
+    </footer>
   </body>
 </html>

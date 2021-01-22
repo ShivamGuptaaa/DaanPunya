@@ -31,7 +31,9 @@ address=''
 
 # Functions for Html pages
 def index(request):
-    return render(request,'webapp/index.html')
+    org = User.objects.filter(is_org=True)
+    params = {'orgs':org}
+    return render(request,'webapp/index.html',params)
 
 def login(request):
     return render(request,'webapp/login.html')
@@ -47,6 +49,9 @@ def about(request):
 
 def contact(request):
     return render(request, 'webapp/contact.html')
+
+def term(request):
+    return render(request, 'webapp/term.html')
 
 @login_required(login_url='/login/')
 def donateMed(request):
@@ -208,16 +213,9 @@ def status1(request,rq_med_id=0):
         return render(request, 'webapp/status1.html',meds)
     else:
         med_lst = dnr_update.objects.filter(user=user)
-        # tmp2= medicine.objects.filter(id=rq_med_id).first()
-        # print(tmp2)
-        # for i in med_lst:
-        #     # tmp = applied_medicine.objects.filter(med=i)
-        #     print(dnr_update.mode_del)
             
         params= {'lst': med_lst}
-        # params= {'lst': med_lst,'app_med': tmp}
         return render(request, 'webapp/status1.html' ,params)
-        # return render(request, 'webapp/status1.html')
 
 
 
@@ -269,7 +267,6 @@ def handleRegister(request):
         lname=request.POST['Lname']
         email=request.POST['email']
         password=request.POST['password']
-        # username=fname+lname+'-'+email
         username=email
         global gen_otp
         gen_otp= str(random.randint(1000,9999))
