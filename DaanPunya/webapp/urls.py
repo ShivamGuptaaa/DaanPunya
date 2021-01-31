@@ -3,6 +3,8 @@ from django.urls import path,include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from django.utils.translation import gettext, gettext_lazy
 
 urlpatterns = [
     path("",views.index,name="home"),
@@ -26,4 +28,12 @@ urlpatterns = [
     path("handleOtp",views.handleOtp,name="handleOtp"),
     path("rqMed/",views.rqMed,name="rqMed"),
     path("sendAddress/<int:id>",views.sendAddress,name="sendAddress"),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    path('reset_password/',auth_views.PasswordResetView.as_view(template_name="webapp/password_reset.html"),name="reset_password"),
+    path('reset_password_sent/',auth_views.PasswordResetDoneView.as_view(template_name="webapp\password_reset_mail_done.html"),name="password_reset_done"),
+    path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name="webapp/password_change.html"),name="password_reset_confirm"),
+    path('reset_password_complete/',auth_views.PasswordResetCompleteView.as_view(template_name="webapp/password_reset_done.html"),name="password_reset_complete"),
+
+
+
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

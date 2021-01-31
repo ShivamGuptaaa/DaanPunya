@@ -8,6 +8,27 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 {%load static%}
+
+<link
+      href="https://fonts.googleapis.com/css2?family=Monoton&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Redressed&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arapey:ital@1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Text:wght@700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -19,14 +40,24 @@
     <title>{% block title %} {% endblock %}</title>
     <style>
       {% block css %} {% endblock %}
+      html{
+        height:100%;
+      }
+
+      
       body{
+        display: flex;
+        flex-direction:column;
+        min-height:100%;
         background-image: url({%static 'bg.jpg'%});
         }
-       /* footer {
-         width:100%;
-          position: fixed;
-          bottom: 0;
-        }*/
+       footer {
+        /* width:100%;
+        bottom: 0;*/
+        margin-top:auto;
+          background-image: url({%static 'download.jpg'%});
+          color:white;
+        }
       .footer_img:hover {  
         opacity: 0.5;  
       } 
@@ -71,7 +102,7 @@
         href="/"
         data-toggle="tooltip"
         data-placement="bottom"
-        title="HomePage">DaanPunya</a>
+        title="HomePage"><img class="img-fluid px-0 py-0" width="145px" src="{%static 'logo.png'%}" alt=""></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -160,7 +191,7 @@
       data-toggle="tooltip"
       data-placement="bottom"
       title="HomePage"
-      >DaanPunya</a
+      ><img class="img-fluid px-0 py-0" width="145px" src="{%static 'logo.png'%}" alt=""></a
     >
     <button
       class="navbar-toggler"
@@ -231,7 +262,7 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
-    <footer style="background-image: url({%static 'download.jpg'%}); color:white">
+    <footer class="container-fluid">
       <div class="row my-1" >
         <div class="col my-auto">
           <div class="row ">
@@ -244,7 +275,7 @@
           <div class="row justify-content-center">
     <a href="https://facebook.com"><img src="{% static 'facebook.jpeg' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a><br>
     <a href="https://instagram.com"><img src="{% static 'insta.jpg' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a><br>
-    <a href="https:// twitter.com"><img src="{% static 'twitter.png' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a>
+    <a href="https://twitter.com"><img src="{% static 'twitter.png' %}" width="40px" height="40px" class="img-thumbnail my-1 mx-2 footer_img" alt=""></a>
   </div>
       <div class="row justify-content-center text-center mb-1">&copy;ALL RIGHTS RESERVED by Shivam & Muskan. <br> VSIT final year project</div>
     </footer>

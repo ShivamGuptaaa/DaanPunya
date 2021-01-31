@@ -1,6 +1,13 @@
 {% extends 'webapp/common.html' %}
 {% block title %} Contact us {% endblock %}
 
-{% block body %} <h2> Contact Daanpunya </h2> {% endblock %}
-
-
+{% block body %}
+  <div class="container">
+      <div class="text-center">
+      <h3>Contact</h3>
+          NAME: <input type="text" class="my-3" name="name" id=""><br>
+          EMAIL: <input type="email" class="my-3" name="email" id=""><br>
+          MESSAGE: <input type="text" class="my-3" name="message" id="">
+      </div>
+  </div>
+{% endblock body %}
