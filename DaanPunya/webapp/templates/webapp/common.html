@@ -7,57 +7,39 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-{%load static%}
-
-<link
-      href="https://fonts.googleapis.com/css2?family=Monoton&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Redressed&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Arapey:ital@1&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Text:wght@700&display=swap"
-      rel="stylesheet"
-    />
+    {%load static%}
+    
     <!-- Bootstrap CSS -->
     <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-      crossorigin="anonymous"
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+    crossorigin="anonymous"
     />
-
+    
     <title>{% block title %} {% endblock %}</title>
     <style>
+      
       {% block css %} {% endblock %}
+
       html{
         height:100%;
       }
-
       
       body{
         display: flex;
         flex-direction:column;
         min-height:100%;
         background-image: url({%static 'bg.jpg'%});
-        }
-       footer {
-        /* width:100%;
-        bottom: 0;*/
+      }
+      
+      footer {
         margin-top:auto;
-          background-image: url({%static 'download.jpg'%});
-          color:white;
-        }
+        background-image: url({%static 'download.jpg'%});
+        color:white;
+      }
+
+    
       .footer_img:hover {  
         opacity: 0.5;  
       } 
@@ -267,8 +249,8 @@
         <div class="col my-auto">
           <div class="row ">
           <a href="/term" class="footer_link col text-center my-2">Terms & Condition</a>
+          <a href="/contact" class="footer_link col text-center my-2">Contact Us</a>
           <a href="/about" class="footer_link col text-center my-2">About Us</a>
-        <a href="/contact" class="footer_link col text-center my-2">Contact Us</a>
         </div>
       </div>
       </div>

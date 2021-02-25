@@ -266,7 +266,16 @@ def handleRegister(request):
         fname=request.POST['Fname']
         lname=request.POST['Lname']
         email=request.POST['email']
+        print( User.objects.filter(email=email).exists())
+        print( User.objects.filter(email=email))
+        print(email)
+        if User.objects.filter(email=email).exists():
+            messages.error(request,"Email already exists...","danger")
+            return render(request, 'webapp/register.html')
         password=request.POST['password']
+        if len(password) < 8 or password.lower() == password or password.upper() == password or not  password.isalnum():
+            messages.error(request,"Length of password must be atleast 8 * Password must have one capital and small alphabet * Password must contain number * Password should not be numeric fully","danger")
+            return render(request, 'webapp/register.html')
         username=email
         global gen_otp
         gen_otp= str(random.randint(1000,9999))
@@ -295,7 +304,13 @@ def handleOrgRegister(request):
         fname=request.POST['Fname']
         lname=request.POST['Lname']
         email=request.POST['email']
+        if User.objects.filter(email=email).exists():
+            messages.error(request,"Email already exists...","danger")
+            return render(request, 'webapp/orgRegister.html')
         password=request.POST['password']
+        if len(password) < 8 or password.lower() == password or password.upper() == password or not  password.isalnum():
+            messages.error(request,"Length of password must be atleast 8 * Password must have one capital and small alphabet * Password must contain number * Password should not be numeric fully","danger")
+            return render(request, 'webapp/orgRegister.html')
         reg_num=request.POST['reg_num']
         cert_num=request.POST['cert_num']
         phone=request.POST['phone']
