@@ -166,6 +166,21 @@ height:13px;
     } else {
       confirm_password.setCustomValidity('');
     }
+
+    if (password.value.length < 8)
+    {
+      password.setCustomValidity('Password length must be atleast 8');
+    } else  if(password.value.search(/[a-z]/) == -1)
+    {
+      password.setCustomValidity('Password must have small case letters');
+    } else  if(password.value.search(/[A-Z]/) == -1)
+    {
+      password.setCustomValidity('Password must have capital case letters');
+    } else  if(password.value.search(/[0-9]/) == -1)
+    {
+      password.setCustomValidity('Password must have numbers');
+    } else {password.setCustomValidity('');}
+      
   }
   
   password.onchange = validatePassword;

@@ -12,7 +12,6 @@ height:13px;
 
 {% endblock %}
 {% block body %}
-<!--  <div class="shadow p-3 mb-2 bg-info text-white">DaanPunya.in</div>-->
 
   <form class="px-4 py-3" id="reg" method='post' action='/handleRegister'>
     {% csrf_token %}
@@ -108,21 +107,11 @@ height:13px;
     $('#next').toggle();
     $('#loading').toggle();
   });
+  
 
-  3-
-
-/*function showPass() {
-  var x = document.getElementById("show_pass");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}*/
-
-$(".showPass").click(function() {
-
-  $(this).toggleClass("showPass");
+  $(".showPass").click(function() {
+    
+    $(this).toggleClass("showPass");
   var input = $($(this).attr("toggle"));
   if (input.attr("type") == "password") {
     input.attr("type", "text");
@@ -130,6 +119,37 @@ $(".showPass").click(function() {
     input.attr("type", "password");
   }
 });
+
+
+var password = document.getElementById("password")
+, confirm_password = document.getElementById("confirm_password");
+
+function validatePassword(){
+if(password.value != confirm_password.value) {
+  confirm_password.setCustomValidity("Passwords Don't Match");
+} else {
+  confirm_password.setCustomValidity('');
+}
+
+if (password.value.length < 8)
+{
+  password.setCustomValidity('Password length must be atleast 8');
+} else  if(password.value.search(/[a-z]/) == -1)
+{
+  password.setCustomValidity('Password must have small case letters');
+} else  if(password.value.search(/[A-Z]/) == -1)
+{
+  password.setCustomValidity('Password must have capital case letters');
+} else  if(password.value.search(/[0-9]/) == -1)
+{
+  password.setCustomValidity('Password must have numbers');
+} else {password.setCustomValidity('');}
+
+}
+
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
 </script>
 
 {% endblock %}
@@ -139,48 +159,3 @@ $(".showPass").click(function() {
 
 
 <!-- Registration Number, Tax Exemption Certificate and annual financial statements -->
-
-
-
-
-
-
-
-
-<!-- <div class="input-group mb-2 mt-2">
-  <div class="input-group-prepend">
-    <span class="input-group-text inpWidth">Gender<h6 style="color:red">*</h6></span>
-  </div>
-    <select class="form-control">
-  <option value="1">Male</option>
-  <option value="2">Female</option>
-  <option value="3">Others</option>
-</select>
-</div> -->
-<!--  
-<div class="input-group mb-2 mt-2">
-  <div class="input-group-prepend">
-    <span class="input-group-text inpWidth">DOB<h6 style="color:red">*</h6></span>
-  </div>
-    <input type="date" class="form-control">
-</div>
-
-  <div class="input-group mb-2 mt-2">
-  <div class="input-group-prepend">
-    <span class="input-group-text inpWidth">Address<h6 style="color:red">*</h6></span>
-  </div>
-
-
-  <div class="form-row">
-    <div class="col-7">
-      <input type="text" class="form-control" placeholder="City">
-    </div>
-    <div class="col">
-      <input type="text" class="form-control" placeholder="State">
-    </div>
-    <div class="col">
-      <input type="text" class="form-control" placeholder="Zip">
-    </div> 
-
-    </div>
-  </div> -->
