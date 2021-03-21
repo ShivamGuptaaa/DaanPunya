@@ -59,7 +59,7 @@ class rq_medicine(models.Model):
     MedQuantity=models.IntegerField()
     MedFor=models.CharField(max_length=10)
     MedReason=models.CharField(max_length=100)
-    MedPresc=models.ImageField(upload_to="webapp/images")
+    MedPresc=models.ImageField(upload_to="images/")
     MedDate=models.DateField(default=now)
 
     def __str__(self):

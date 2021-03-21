@@ -62,7 +62,7 @@ def donateMed(request):
         MedQuantity=request.POST['MedQuantity']
         MedFor=request.POST['MedFor']
         MedReason=request.POST['MedReason']
-        MedPresc=request.POST['MedPresc']
+        MedPresc=request.FILES.get('MedPresc')
         MedPic=request.FILES.get('MedPic')
         MedPic2=request.FILES.get('MedPic2')
         # MedAddress=request.POST['MedAddress']
@@ -218,7 +218,7 @@ def status1(request,rq_med_id=0):
         return render(request, 'webapp/status1.html' ,params)
 
 
-
+@login_required(login_url='/login/')
 def rqMed(request):
     if request.method == "POST":
         user_email = request.user
@@ -226,13 +226,19 @@ def rqMed(request):
         MedQuantity=request.POST['MedQuantity']
         MedFor=request.POST['MedFor']
         MedReason=request.POST['MedReason']
-        MedPresc=request.POST['MedPresc']
-        med = rq_medicine(user_email=request.user,MedName=MedName,MedFor=MedFor,MedReason=MedReason,MedPresc=MedPresc,MedQuantity=MedQuantity)
-        med.save()
-        messages.success(request,"Your request for medicine is been uplaoded, you will be notified as soon as any medicine matches")
-        update= org_update(user=request.user,rq_med=med)
-        update.save()
-        return render(request,'webapp/rqMed.html')
+        MedPresc=request.FILES.get('MedPresc')
+        print(MedPresc)
+        recheck_med = medicine.objects.filter(MedName__iexact = MedName).exclude(update = True)
+        if recheck_med:
+            params={'meds':recheck_med}
+            return render(request, 'webapp/searchResult.html',params)
+        else:
+            med = rq_medicine(user_email=request.user,MedName=MedName,MedFor=MedFor,MedReason=MedReason,MedPresc=MedPresc,MedQuantity=MedQuantity)
+            med.save()
+            messages.success(request,"Your request for medicine is been uplaoded, you will be notified as soon as any medicine matches")
+            update= org_update(user=request.user,rq_med=med)
+            update.save()
+            return render(request,'webapp/rqMed.html')
     return render(request,'webapp/rqMed.html')
 
 

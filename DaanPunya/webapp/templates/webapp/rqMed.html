@@ -11,7 +11,7 @@
 {% block body %}
   
 <h1 class="text-center">
-    <span class="badge badge-pill badge-warning">Request for medicine here Here</span>
+    <span class="badge badge-pill badge-warning">Request for medicine here</span>
   </h1>
   <!-- <div class="shadow-lg p-3 mb-5 bg-white rounded" style="background-color: #e3f2fd;">Hello ____ ,please fill the following details in order to request for medicine</div> -->
   
@@ -28,7 +28,7 @@
       <h6 style="height:10px; font-size:15pt;">Hello ____ ,please fill the following details in order to donate medicine</h6>
   </div> -->
   
-  <form action="/rqMed/" method="post">
+  <form action="/rqMed/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="col-md-7 col-sm-10 mx-auto">
       <!-- <label class="sr-only" for="inlineFormInputGroup">Username</label> -->
@@ -130,7 +130,7 @@
         <button
           type="submit"
           id="submit"
-          class="btn btn-danger"
+          class="btn btn-danger my-5"
           data-toggle="tooltip"
           data-placement="right"
           title="Submit Details"
