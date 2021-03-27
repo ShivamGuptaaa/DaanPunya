@@ -54,7 +54,7 @@ class dnr_address(models.Model):
 class rq_medicine(models.Model):
     id=models.AutoField(primary_key = True)
     user_email=models.ForeignKey(User(), default=1, on_delete=models.CASCADE)
-    update=models.BooleanField(default=False)
+    notified=models.BooleanField(default=False)
     MedName=models.CharField(max_length=30)
     MedQuantity=models.IntegerField()
     MedFor=models.CharField(max_length=10)

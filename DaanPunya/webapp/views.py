@@ -73,6 +73,9 @@ def donateMed(request):
         messages.success(request,"Your submission to donate medicine is successfull , THANKYOU!")
         update = dnr_update(user=request.user, med=ins)
         update.save()
+
+        #below function is used to check for requested medicine
+        check_rqMed(MedName)
         return redirect('status1')
     return render(request, 'webapp/donateMed.html')
 
@@ -400,7 +403,7 @@ def handleLogin(request):
             user_login(request,user)
             messages.success(request,"Successfully LOGGED IN")
             if request.GET.get('next'):
-                return redirect(request.GET('next'))
+                return redirect(request.GET.get('next'))
             else:
                 return redirect('home')
         else:
@@ -412,4 +415,18 @@ def handleLogin(request):
 def handleLogout(request):
     logout(request) 
     messages.success(request,"Successfully LOGGED OUT","warning")
-    return redirect('home')
+    return redirect('home')    
+
+
+def check_rqMed(MedName):
+    rq_Med = rq_medicine.objects.get(MedName__iexact=MedName)
+    if rq_Med:
+        subject = f'Update on {MedName}'
+        print(rq_Med)
+        message = f'Hello {rq_Med.user_email.first_name} as you have placed request for {MedName} is available, please visit our site and search for it before others apply for it. http://127.0.0.1:8000 '
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [rq_Med.user_email, ] 
+        send_mail( subject, message, email_from, recipient_list )
+        rq_Med.notified=True
+        rq_Med.save()
+    
