@@ -3,11 +3,24 @@
 
 {% block body %}
   <div class="container">
-      <div class="text-center">
-      <h3>Contact</h3>
-          NAME: <input type="text" class="my-3" name="name" id=""><br>
-          EMAIL: <input type="email" class="my-3" name="email" id=""><br>
-          MESSAGE: <input type="text" class="my-3" name="message" id="">
+      <div class="text-center form-group">
+      <h1 style="color:brown">Contact</h1>
+         <div class="row my-3">
+           <label class="col-2 form-control col-form-label">Name</label>
+           <input type="text" class="form-control col-10" name="name" id="">
+          </div>
+         <div class="row my-3">
+           <label class="col-2 form-control col-form-label">Email</label>
+           <input type="text" class="form-control col-10" name="name" id="">
+          </div>
+         <div class="row my-3">
+           <label class="col-2 form-control col-form-label">Message</label>
+           <input type="text" class="form-control col-10" name="name" id="">
+          </div>
+         <div class="text-center my-3">
+           <button type="submit" class="btn btn-info">SUBMIT</button>
+          </div>
+
       </div>
   </div>
 {% endblock body %}

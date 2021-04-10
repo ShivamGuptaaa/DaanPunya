@@ -14,7 +14,7 @@
 <div class="alert alert-warning text-danger" align="center" role="alert">
   <div>
     <strong
-      >Hello ____ ,please fill the following details in order to donate
+      >Hello {{request.user.first_name}} ,please fill the following details in order to donate
       medicine</strong
     >
   </div>
@@ -132,7 +132,6 @@
         class="form-control heightSet"
         name="MedPresc"
         id="MedPresc"
-        required
       />
     </div>
 
@@ -214,7 +213,7 @@
     <!--                required>-->
     <!--        </div>-->
 
-    <div class="text-center">
+    <div class="text-center my-5">
       <button
         type="submit"
         id="submit"

@@ -81,28 +81,32 @@ def donateMed(request):
 
 @login_required(login_url='/login/')
 def medView(request,id):
-    displayMed = medicine.objects.filter(id=id)
-    params = {'med': displayMed[0]}
+    displayMed = medicine.objects.get(id=id)
+    params = {'med': displayMed}
     if request.method == 'POST':
-        rqst_user_med = dnr_update.objects.filter(med=displayMed[0]).first()
+        rqst_user_med = dnr_update.objects.filter(med=displayMed).first()
         print(rqst_user_med)
         rqst_user_med.rqst_user_email = request.user.email
         rqst_user_med.save()
-        print(displayMed)
-        displayMed[0].update = True
-        displayMed[0].save
+        # print("Display med: ",displayMed)
+        # print(displayMed.update)
+        displayMed.med_rqstd = True
+        displayMed.save()
+        print(displayMed.update)
         # To create applied_medicine table we are using below command
         tmp = applied_medicine(med=rqst_user_med.med,user=request.user)
         tmp.save()
-        donor = displayMed[0].user_email
+        donor = displayMed.user_email
         subject = 'Your medicine got a receiver'
-        message = f'Hi {donor.first_name}{donor.last_name}, {request.user.first_name} has requested to get your {displayMed[0].MedName} medicine, PLease follow the link below for more details are proceed further or to decline the request'
+        message = f'Hi {donor.first_name}{donor.last_name}, {request.user.first_name} has requested to get your {displayMed.MedName} medicine, PLease follow link below for further process http://127.0.01:8000/status1'
         email_from = settings.EMAIL_HOST_USER 
         recipient_list = [donor.email, ] 
         send_mail( subject, message, email_from, recipient_list ) 
-        return render(request, 'webapp/medView.html',{'med': displayMed[0],'ack': 'Requested to donor for medicine'})
-    if displayMed[0].update:
-        params = {'med': displayMed[0],'ack': 'Requested to donor for medicine'}
+        # return render(request, 'webapp/medView.html',{'med': displayMed,'ack': 'Requested to donor for medicine'})
+        messages.success(request,"Please fill required details of the medicine","warning")
+        return redirect('status')
+    if displayMed.update:
+        params = {'med': displayMed,'ack': 'Requested to donor for medicine'}
     return render(request, 'webapp/medView.html',params)
 
 @login_required(login_url='/login/')
@@ -110,13 +114,17 @@ def searchResult(request):
     flag=1
     # This variable flag is used to fix repeating similar meds issue
     if request.GET['searchMed'] == "all":
+        meds = medicine.objects.all().exclude(med_rqstd = True)
+        similar_meds=None
+        flag=None
+    elif request.GET['searchMed'] == "show all":
         meds = medicine.objects.all()
         similar_meds=None
         flag=None
     else:
         searchMed = request.GET['searchMed']
-        meds = medicine.objects.filter(MedName__iexact = searchMed).exclude(update = True)
-        similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed).exclude(update = True)
+        meds = medicine.objects.filter(MedName__iexact = searchMed).exclude(med_rqstd = True)
+        similar_meds = medicine.objects.filter(MedName__icontains = searchMed).exclude(MedName__iexact = searchMed).exclude(med_rqstd = True)
         if meds and similar_meds :
             flag=None
         if not meds and not similar_meds :
@@ -130,7 +138,7 @@ def status(request,rq_med_id=0):
     med_lst = {}
     user = request.user
     if request.method == "POST":
-        if request.POST['flag'] == "rq_med":
+        if request.POST['flag'] == "rq_med":                    #When org directly request for medicne
             del_mode = request.POST['del_mode']
             from_date = request.POST['from_date']
             to_date = request.POST['to_date']
@@ -144,7 +152,7 @@ def status(request,rq_med_id=0):
             update.save()
             rqst_med.update=True
             rqst_med.save()
-        elif request.POST['flag'] == "app_med":
+        elif request.POST['flag'] == "app_med":                 # When org applies from list of medicine
             del_mode = request.POST['del_mode']
             from_date = request.POST['from_date']
             to_date = request.POST['to_date']
@@ -159,7 +167,7 @@ def status(request,rq_med_id=0):
             update_med.save()
             # mail to donor that org has chosen mode of delivery and date range
             subject = f'Update on your medicine ( {update_med.med.MedName} )'
-            message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
+            message = f'Hi {update_med.user.first_name}{update_med.user.last_name}, {request.user.first_name} {request.user.last_name} has chosen mode of delivery( Note: All charges needed in   b delivery process will be taken care by {request.user.first_name} {request.user.last_name}) and range of date when they need that medicine, PLease follow the link below and select the date from that range according to your preference of medicine to be picked http://127.0.0.1:8000/status1 '
             email_from = settings.EMAIL_HOST_USER 
             recipient_list = [update_med.user.email, ] 
             send_mail( subject, message, email_from, recipient_list )
@@ -419,7 +427,7 @@ def handleLogout(request):
 
 
 def check_rqMed(MedName):
-    rq_Med = rq_medicine.objects.get(MedName__iexact=MedName)
+    rq_Med = rq_medicine.objects.filter(MedName__iexact=MedName).first()
     if rq_Med:
         subject = f'Update on {MedName}'
         print(rq_Med)
@@ -429,4 +437,32 @@ def check_rqMed(MedName):
         send_mail( subject, message, email_from, recipient_list )
         rq_Med.notified=True
         rq_Med.save()
-    
+    else:
+        pass
+
+@login_required(login_url='/login/')
+def med_rcvd(request,id=0):
+    user = request.user
+    # print(request.POST['med_rcvd'])
+    try:    
+        sub = request.POST['med_rcvd']
+    except Exception:
+        messages.success(request,"Something went wrong! Try again",'warning')
+        return redirect('status')
+    if sub == "on":
+        print("med rcvd")
+        med_details = dnr_update.objects.get(med=id)
+        print("before",med_details.med.MedRcvd)
+        med_details.med_rcvd = True
+        med_details.med.MedRcvd = True
+        med_details.med.save()
+        med_details.save()
+        subject = 'Medicine Received !!!'
+        donor = med_details.med
+        message = f'Hi {donor.user_email.first_name}{donor.user_email.last_name}, your medicine ({donor.MedName}) is received by {request.user.first_name}'
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [donor.user_email.email, ] 
+        send_mail( subject, message, email_from, recipient_list ) 
+        messages.success(request,"Medicne details updated (MED RECEIVED)")
+        return redirect('status')
+    return redirect('status')

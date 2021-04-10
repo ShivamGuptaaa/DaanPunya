@@ -20,7 +20,8 @@ class extUser(AbstractUser):
 class  medicine(models.Model):
     id=models.AutoField
     user_email=models.ForeignKey(User(), default=1, on_delete=models.CASCADE)
-    update=models.BooleanField(default=None,null=True)
+    med_rqstd = models.BooleanField(default=False)
+    update=models.BooleanField(default=False)
     MedName=models.CharField(max_length=30)
     MedExpiry=models.CharField(max_length=20,default="")
     MedQuantity=models.IntegerField(default=0)
@@ -32,6 +33,7 @@ class  medicine(models.Model):
     MedAddress=models.CharField(max_length=50,default="",blank=True)
     MedZip=models.CharField(default="0",max_length=6,blank=True)
     MedDate=models.DateField(default=datetime.date.today)
+    MedRcvd  = models.BooleanField(default=False)
 
     def __str__(self):
         return self.MedName
@@ -65,6 +67,7 @@ class rq_medicine(models.Model):
     def __str__(self):
         return self.MedName
 
+# del_choice will have all the delivery mode options from donor to org
 del_choice = {
 
     ('Not Selected',None),
@@ -102,7 +105,7 @@ class dnr_update(models.Model):
     to_date = models.DateField(default=None,null=True)
     select_date = models.DateField(default=None,null=True)
     rqst_user_email = models.CharField(default=None,null=True,max_length=50)
-    med_dispatched = models.BooleanField(default=False)
+    med_rcvd = models.BooleanField(default=False)
 
     def __str__(self):
         return self.med.MedName

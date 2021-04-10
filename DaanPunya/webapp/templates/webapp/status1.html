@@ -11,14 +11,23 @@
   
   
   background: #98FB98;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #008000, #ADFF2F, #00FF7);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #008000, #ADFF2F, #00FF7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(to right, #d291bc, #957dad, #d291bc);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #d291bc, #957dad, #d291bc); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 {% endblock css %}
 
+<!-- <style>
+  
+</style> -->
+
 {% block head %}
   <script>
+    $(document).ready(function()
+    {
+      $('.progress-indicator').hide();
+      $('.progress').hide();
+    });
 
       $(function () {
     $('[data-toggle="popover"]').popover();
@@ -150,13 +159,13 @@
     <button type="submit" class="btn btn-primary mx-auto">SUBMIT</button>
 </div>
 
-
+<!-- 
 <div class="input-group-text">
-    <input class="ml-5 mr-2" type="checkbox" value="">
+    <input class="ml-5 mr-2" type="checkbox" disabled value="">
     <label class="">
       Medicine dispatched
     </label>
-  </div>
+  </div> -->
 </form>
   <div class="row">
       <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Medicine uploaded</h6></div>
@@ -189,12 +198,14 @@
 </div>
 
 
-<div class="input-group-text">
-    <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
-    <label class="" for="defaultCheck1">
-      Medicine received
-    </label>
-  </div>
+{% if i.med_rcvd %}
+<div class="text-center">
+<label class="btn btn-success" for="defaultCheck1">
+  Medicine received by organization
+</label>
+</div>
+{% endif %}
+
   <div class="row">
       <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">Medicine uploaded:</h6></div>
       <div class="mx-auto my-1"><h6 style="color: rgb(1, 48, 1);" class="progress-indicator">org requested for med</h6></div>

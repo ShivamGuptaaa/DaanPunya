@@ -30,12 +30,12 @@
         display: flex;
         flex-direction:column;
         min-height:100%;
-        background-image: url({%static 'bg.jpg'%});
+        background-image: url({% static 'bg.jpg'%});
       }
       
       footer {
         margin-top:auto;
-        background-image: url({%static 'download.jpg'%});
+        background-image: url({% static 'download.jpg'%});
         color:white;
       }
 
@@ -97,17 +97,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
+      
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <div class="btn-group">
-            <button type="button" style="background-color: #058f71;color:#edf2f5" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{user.first_name}}
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="/handleLogout">LOGOUT</a>
-            </div>
-          </div>
-          </li>
+          
+          
           {% if user.is_org %}
           <!-- if user is org  -->
 
@@ -128,6 +122,8 @@
           <li class="nav-item active">
             <a class="nav-link" href="/status1">Status</a>
           </li>
+
+          
           {% endif %}
 
           <li class="nav-item active">
@@ -139,8 +135,24 @@
           <li class="nav-item active">
             <a class="nav-link" href="/term">Terms & Conditions</a>
           </li>
+
+          <li>
+          <div class="btn-group">
+            <button type="button" style="background-color: #058f71;color:#edf2f5" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{user.first_name}}
+            </button>
+            <li>
+              <!-- dropdown-menu  -->
+            <div class="nav-item active"> 
+              <!-- dropdown-item  -->
+              <a class="nav-link btn btn-outline-light mx-2" href="/handleLogout">LOGOUT</a>
+            </div>
+          </li>
+          </li>
+          </div>
         </ul>
-      
+             
+
         {% if user.is_org %}
     <form class="form-inline my-2 my-lg-0" action="/searchResult">
       <input

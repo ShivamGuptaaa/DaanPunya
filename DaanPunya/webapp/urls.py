@@ -28,6 +28,8 @@ urlpatterns = [
     path("handleOtp",views.handleOtp,name="handleOtp"),
     path("rqMed/",views.rqMed,name="rqMed"),
     path("sendAddress/<int:id>",views.sendAddress,name="sendAddress"),
+    path("medRcvd/<int:id>",views.med_rcvd,name="medRcvd"),
+
 
     path('reset_password/',auth_views.PasswordResetView.as_view(template_name="webapp/password_reset.html"),name="reset_password"),
     path('reset_password_sent/',auth_views.PasswordResetDoneView.as_view(template_name="webapp\password_reset_mail_done.html"),name="password_reset_done"),
