@@ -58,18 +58,55 @@ body {
     <div class="row justify-content-center">
       Zipcode: <b>{{med.MedZip}}</b>
     </div>
+
+    <form action="/medView/{{med.id}}" method="post">
+      {% csrf_token %}
     <div class="row my-2">
-      <button type="button" id = "popcart" data-trigger="hover" class="btn btn-secondary  mx-auto" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Request donor to approve the doantion and ask for other details">
+
+{% if ack %}
+<label class="btn btn-success mx-auto ">Requested donor to approve</label>
+{% else %}
+      <button type="submit" name="rqst_med" id = "rqst_med" data-trigger="hover" class="btn btn-secondary  mx-auto" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Request donor to approve the donation and ask for other details">
         Request Medicine
-      <!-- <button class="btn btn-info"></button> -->
+      </button>
+
+      <div class="spinner-border text-warning mx-auto" id="loading" name="loading" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+
+{% endif %}
+
     </div>
+ 
+    <input type="hidden" name="hid" id="hid" value="false">
+    </form>
+
+  </div>
   </div>
 </div>
 
 <script>
   $(function () {
-    $('[data-toggle="popover"]').popover()
-  })
+    $('[data-toggle="popover"]').popover();
+  });
+
+
+$(document).ready(function()
+{
+  $('#loading').hide();
+});
+
+$('#rqst_med').click(function()
+{
+  $('#rqst_med').toggle();
+  $('#loading').toggle();
+});
+
+/*$('#rqst_med').click(function()
+{
+  $('#hid').val("true");
+});*/
+
 </script>
 
 {% endblock %}

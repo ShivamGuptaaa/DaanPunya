@@ -1,10 +1,320 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Status</h1>
-</body>
-</html>
+{% extends "webapp/common.html" %}
+{% block title %}
+  Status
+{% endblock title %}
+
+{% block head %}
+
+<style>
+
+  body {
+    background-color: #696969;
+  }
+</style>
+
+  <script> 
+
+        function del_update()
+        {
+            document.getElementById("progressbar").setAttribute("style","width: 25%");
+        }
+        function from_date_update()
+        {var valueDate = document.getElementById('from_date').value;
+
+        if (!valueDate) {
+            alert("Please select starting date")
+        }
+        else
+        {
+            document.getElementById("progressbar").setAttribute("style","width: 50%");
+            $(function () {
+                //$('#from_date_check').popover();
+              });
+        }
+    }
+
+        function to_date_update()
+        {var valueDate = document.getElementById('to_date').value;
+
+        if (!valueDate) {
+            alert("Please select ending date")
+        }
+        else
+        {
+            document.getElementById("progressbar").setAttribute("style","width: 75%");
+        }
+
+    }
+
+</script>
+    
+{% endblock head %}
+
+{% block body %}
+
+
+
+
+{% if app_med %}
+
+<!-- Here the loop for respective med details starts   -->
+{% for i in app_med %}
+  
+<div class="container">
+<div class="jumbotron my-3" id="field1" style="padding: 0.8rem 1rem;
+margin-bottom: 1rem;
+border-radius: 1.8rem;
+
+
+background: #1a2a6c;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #FF8C00, #000000,#008000);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #FF8C00, #000000,#008000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+">
+  <h1 class="display-4">{{i.med.MedName}}</h1>
+  <p class="lead">{{i.med.MedReason}}</p>
+  <div class="row">
+      <h6 class="ml-5">Medicine Quantity: {{i.med.MedQuantity}}</h6>
+      <h6 class="ml-5">Medicine For: {{i.med.MedFor}}</h6>
+  </div>
+
+ <!-- This if condition is used to know that whetherthere is any update in medicine or not since it has been rwquested by org    -->
+  {% if not i.med.update %}
+      
+<form action="/status/{{i.med.id}}" method="post">
+    {% csrf_token %}
+<input type="hidden" name="flag",id="flag" value="app_med">
+  <div class="input-group-text row-sm my-1">
+    org pickup<input type="radio" value="org_pick" onclick="del_update()" class="mx-5" id="del_mode" name="del_mode" aria-label="Radio button to select delivery mode">
+    courier<input type="radio" value="courier" onclick="del_update()" class="mx-5" id="del_mode" name="del_mode" aria-label="Radio button to select delivery mode">
+    
+</div>
+
+<div class="input-group-text row-lg my-1">
+   <div class="mr-2">From:</div> <input type="date" required class="mr-2" name="from_date" id="from_date">
+
+   <a onclick="javascript:from_date_update()" id="from_date_check" name="from_date_check" data-content="123456" data-trigger="hover"  data-container="body" data-toggle="popover" data-placement="bottom" data-content=""><svg width="1em" height="1em" viewBox="0 0 -8 16 " class="bi bi-check-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+    <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+  </svg></a>
+
+    <div class="ml-auto mr-2">To:</div> <input type="date" class="" name="to_date" id="to_date">
+
+    <a onclick="javascript:to_date_update()"><svg width="1em" height="1em" viewBox="0 0 -8 16 " class="bi bi-check-square ml-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+      </svg></a>
+
+    <button type="submit" class="btn btn-primary mx-auto">SUBMIT</button>
+</div>
+
+
+<div class="input-group-text">
+    <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
+    <label class="" for="defaultCheck1">
+      Medicine received
+    </label>
+  </div>
+</form>
+  <div class="row">
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">mode of del</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">date range</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">medicine received</h6></div>
+      
+  </div>
+  <div class="progress bg-dark" style="height: 35px;">
+    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" name="progressbar" id="progressbar" role="progressbar" style="width: 01%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
+  </div>
+</div>
+</div>
+
+<!-- If med details is updated then code below will execute -->
+{% else %}
+
+<div class="my-2 row-sm input-group-text bg-info">
+<h6 class="mx-auto">Mode of Delivery chosen: 
+    <!-- This if is used to display the org_pick mode of delivey in normal form instead of abbrevation which is returned from the table  -->
+{% if i.mode_del ==  "org_pick" %}
+    Pickup by organization itself
+    {% else %}
+    {{i.mode_del}}
+{% endif %}
+    </h6>
+<h6 class="mx-auto">Date range is From: {{i.frm_date}}</h6>
+<h6 class="mx-auto">To: {{i.to_date}}</h6>
+
+{% if i.select_date %}
+  <h6 class="mx-auto">Selected date: {{i.select_date}}</h6>
+{% endif %}
+</div>
+
+{% if i.select_date %}
+<div class="my-2 row-sm input-group-text bg-primary">
+  <form action="/status/{{i.med.id}}" id="snd_mail_form" method="post">
+    {% csrf_token %}
+<button type="submit" class="mx-auto" onclick="send_address(event);" style="color: red;">Donor have submitted the address to get address click and it will be mailed to you</button>
+</form>
+</div>
+{% endif %}
+  
+
+
+
+<div class="input-group-text">
+    <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
+    <label class="" for="defaultCheck1">
+      Medicine received
+    </label>
+  </div>
+</form>
+  <div class="row">
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">mode of del</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">date range</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">medicine received</h6></div>
+      
+  </div>
+  <div class="progress bg-dark" style="height: 35px;">
+    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 66.66%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
+  </div>
+</div>
+</div>
+
+{% endif %}
+<!-- end of if condition which checks med update  -->
+
+{% endfor %}
+<!-- end of looping of available med in lst  -->
+
+{% else %}
+<!-- ==================================================================================================================================== -->
+<h1 class="text-center my-5">You don't have any medicine to show</h1>
+{% endif %}
+<!-- end of if condition which checks med is still in lst or not -->
+
+
+
+<!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+
+
+
+<!-- It will check whether any medicine is there in list -->
+{% if lst %}
+
+<!-- Here the loop for respective med details starts   -->
+{% for i in lst %}
+  
+<div class="container">
+<div class="jumbotron my-3" id="field2" style="padding: 0.8rem 1rem;
+margin-bottom: 1rem;
+border-radius: #DCDCDC
+
+
+background: #1a2a6c;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #000000, #b21f1f, #e6be92);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #FF8C00, #e2a218, #e6be92); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ -">
+  <h1 class="display-4">{{i.rq_med.MedName}}</h1>
+  <p class="lead">{{i.rq_med.MedReason}}</p>
+  <div class="row">
+      <h6 class="ml-5">Medicine Quantity: {{i.rq_med.MedQuantity}}</h6>
+      <h6 class="ml-5">Medicine For: {{i.rq_med.MedFor}}</h6>
+  </div>
+
+ <!-- This if condition is used to know that whetherthere is any update in medicine or not since it has been rwquested by org    -->
+  {% if not i.rq_med.update %}
+      
+<form action="/status/{{i.rq_med.id}}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="flag",id="flag" value="rq_med">
+
+  <div class="input-group-text row-sm my-1">
+    org pickup<input type="radio" value="org_pick" onclick="del_update()" class="mx-5" id="del_mode" name="del_mode" aria-label="Radio button to select delivery mode">
+    courier<input type="radio" value="courier" onclick="del_update()" class="mx-5" id="del_mode" name="del_mode" aria-label="Radio button to select delivery mode">
+    
+</div>
+
+<div class="input-group-text row-lg my-1">
+   <div class="mr-2">From:</div> <input type="date" required class="mr-2" name="from_date" id="from_date">
+
+   <a onclick="javascript:from_date_update()" id="from_date_check" name="from_date_check" data-content="123456" data-trigger="hover"  data-container="body" data-toggle="popover" data-placement="bottom" data-content=""><svg width="1em" height="1em" viewBox="0 0 -8 16 " class="bi bi-check-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+    <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+  </svg></a>
+
+    <div class="ml-auto mr-2">To:</div> <input type="date" class="" name="to_date" id="to_date">
+
+    <a onclick="javascript:to_date_update()"><svg width="1em" height="1em" viewBox="0 0 -8 16 " class="bi bi-check-square ml-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+      </svg></a>
+
+    <button type="submit" class="btn btn-primary mx-auto">SUBMIT</button>
+</div>
+
+
+<div class="input-group-text">
+    <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
+    <label class="" for="defaultCheck1">
+      Medicine received
+    </label>
+  </div>
+</form>
+  <div class="row">
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">mode of del</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">date range</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">medicine received</h6></div>
+      
+  </div>
+  <div class="progress bg-dark" style="height: 35px;">
+    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" name="progressbar" id="progressbar" role="progressbar" style="width: 01%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
+  </div>
+</div>
+</div>
+
+<!-- If med details is updated then code below will execute -->
+{% else %}
+
+<div class="my-2 row-sm input-group-text bg-info">
+<h6 class="mx-auto">Mode of Delivery chosen: 
+    <!-- This if is used to display the org_pick mode of delivey in normal form instead of abbrevation which is returned from the table  -->
+{% if i.mode_del ==  "org_pick" %}
+    Pickup by organization itself
+    {% else %}
+    {{i.mode_del}}
+{% endif %}
+    </h6>
+<h6 class="mx-auto">Date range is From: {{i.frm_date}}</h6>
+<h6 class="mx-auto">To: {{i.to_date}}</h6>
+</div>
+
+
+<div class="input-group-text">
+    <input class="ml-5 mr-2" type="checkbox" value="" id="defaultCheck1">
+    <label class="" for="defaultCheck1">
+      Medicine received
+    </label>
+  </div>
+</form>
+  <div class="row">
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">mode of del</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">date range</h6></div>
+      <div class="mx-auto my-1"><h6 style="color: yellow;" class="progress-indicator">medicine received</h6></div>
+      
+  </div>
+  <div class="progress bg-dark" style="height: 35px;">
+    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 66.66%;" aria-valuenow="50" aria-valuemin="" aria-valuemax="100"></div>
+  </div>
+</div>
+</div>
+
+{% endif %}
+<!-- end of if condition which checks med update  -->
+
+{% endfor %}
+<!-- end of looping of available med in lst  -->
+
+{% else %}
+<h1 class="text-center my-5">You don't have any medicine to show</h1>
+{% endif %}
+<!-- end of if condition which checks med is still in lst or not -->
+
+
+{% endblock body %}

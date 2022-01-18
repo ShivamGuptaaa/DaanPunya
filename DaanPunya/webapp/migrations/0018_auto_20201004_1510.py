@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='medicine',
             name='pub_date',
-            field=models.DateField(default=datetime.date),
+            field=models.DateField(default=datetime.date.today),
         ),
     ]

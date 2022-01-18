@@ -25,87 +25,15 @@
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
       crossorigin="anonymous"
     ></script>
+
+    
+    {% block head %}
+      
+    {% endblock head %}
   </head>
 
 
   <body>
-    <!--  Navigation Bar-->
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-      <a
-        class="navbar-brand"
-        href="/"
-        data-toggle="tooltip"
-        data-placement="bottom"
-        title="HomePage"
-        >DaanPunya.in</a
-      >
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-
-          {% if user.is_authenticated %}
-          <div class="btn-group">
-            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{user.first_name}}
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="/handleLogout">LOGOUT</a>
-            </div>
-          </div>
-      
-          </li>
-
-          {% else %}
-
-          <li class="nav-item active">
-            <a class="nav-link" href="/login"
-              >SignIn/SignUp <span class="sr-only">(current)</span></a
-            >
-          </li>
-
-            {% endif %}
-
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contact">Contact Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/termsnCon">Terms & Conditions</a>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0" action="/searchResult">
-          <input
-            class="form-control mr-sm-2"
-            type="search"
-            id="searchMed"
-            name="searchMed"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button
-            class="btn btn-outline-light my-2 my-sm-0"
-            id="searchBtn"
-            type="submit"
-          >
-            Search
-          </button>
-        </form>
-      </div>
-    </nav>
-     -->
 <!-- --------------------------------------------------------------------------------------------------------------------------------------- -->
 
 <!-- If User is authenticated then only their respective fields will be shown -->
@@ -146,6 +74,12 @@
             <a class="nav-link active" href="/donateMed">Donate</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="/status">Status</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/status1">Status1</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
           </li>
           <li class="nav-item">
@@ -177,7 +111,7 @@
 </nav>
 
  {% else %}
-<!-- If user is not legged in then this default page will be shown to each and every visitor -->
+<!-- If user is not logged in then this default page will be shown to each and every visitor -->
   <!--  Navigation Bar-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-success">
     <a
@@ -221,6 +155,8 @@
 
  {% endif %}
 
+<!-- Here the below message part is putted in block messages so it can not be inherited in some pages where it is not needed like in homepage -->
+ {% block messages %}
 {% for message in messages %}
 <div
   class="alert alert-{{ message.tags }} alert-dismissible fade show"
@@ -232,6 +168,7 @@
   </button>
 </div>
 {% endfor %}
+{% endblock %}
     
     {% block body %} {% endblock %}
     <!-- Optional JavaScript -->
